@@ -1,0 +1,869 @@
+html {
+    font-family: sans-serif;
+    overflow-x: hidden;
+}
+body{
+    overflow-x: hidden!important;
+}
+.header-section {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+    color: white;
+    font-weight: 600;
+}
+.first-slide{
+    background-image: url(../../images/welcome2.html)!important;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+}
+.sec-slide{
+    background-image: url(../../images/team2.jpeg)!important;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.third-slide{
+    background-image: url(../../images/me.html\ and\ wife.jpg)!important;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.over1{
+    position: absolute;
+    opacity: .2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:#008864 ;
+}
+.swip-text button{
+    background: #14ae85;
+    font-weight: 500;
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 40px;
+}
+.swip-text button a{
+    color: white;
+}
+.swip-text h1, .swip-text p, .swip-text h3{
+    color: white;
+}
+.swip-text{
+    z-index:40;
+    font-weight: bold;
+    width: 80%;
+    position: absolute;
+    /* top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%); */
+}
+.swiper-slide img{
+    position: absolute;
+    top: 0;
+    left
+}
+.header-section h1 {
+    color: white;
+}
+
+.header-section .first-child {
+    position: relative;
+    flex-basis: 60%;
+    background-image: url(../../images/family.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: fixed;
+    background-clip: content-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0.6;
+    background-color: green;
+}
+
+.header-section .first-child .text {
+    /* margin: 20px; */
+    padding: 20px;
+    width: 90%;
+    z-index: 20;
+}
+
+.header-section .second-child {
+    flex-basis: 40%;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
+.empty {
+    height: 100%;
+    background-color: black;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: .2;
+}
+
+.second-child .parent-child {
+    background: black url(../../images/me.html\ and\ wife.jpg);
+    background-size: cover;
+    background-position: center;
+    background-position: fixed;
+    background-clip: padding-box;
+    background-repeat: no-repeat;
+    filter: blur(0);
+    flex-basis: 70%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    position: relative;
+}
+
+.second-child .parent-child .text {
+    width: 60%;
+    font-weight: 900;
+    z-index: 20;
+    line-height: 20px;
+}
+
+.second-child .parent-child2 {
+    background: #008864 url(../../images/path.html\ \(1\).png);
+    background-position: center;
+    background-size: 40%;
+    background-repeat: no-repeat;
+    opacity: .7;
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.second-child .parent-child2 .text {
+    width: 80%;
+    /* padding: 50px; */
+    flex-direction: column;
+    font-weight: 900;
+    z-index: 20;
+    line-height: 20px;
+}
+
+.parent-child2 .text button {
+    color: #008864;
+    font-weight: 500;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 40px;
+}
+
+.service {
+    height: 670px;
+    width: 100%;
+    background: url(../../images/advice.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    flex-direction: column;
+    text-align: center;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 50px;
+    position: relative;
+}
+
+.over {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0.4;
+    background-color: rgb(6, 63, 6);
+}
+
+.service h4 {
+    font-weight: 500;
+    color: white;
+    z-index: 20;
+}
+
+.service .service-text {
+    width: 35%;
+    font-weight: 600;
+    font-size: 30px;
+    z-index: 20;
+}
+
+.service-2 {
+    width: 95%;
+    margin: 20px;
+    z-index: 10;
+    font-size: 20px;
+}
+.service-2 p{
+    font-size: 16px;
+}
+.service .service-card {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+
+}
+
+.service .service-card .card {
+    z-index: 20;
+    flex-basis: 24%;
+    background: #14ae85;
+    height: 380px;
+    text-align: left;
+    margin: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 1.5s ease;
+    position: relative;
+}
+
+.service .service-card .card:hover {
+    transform: scale(1.1);
+}
+
+.service .service-card .an {
+    color: #008864;
+    background-color: white;
+}
+
+.service .service-card .card p {
+    margin: 40px 0;
+}
+
+.service .service-card a {
+    text-decoration: none;
+    color: white;
+    position: absolute;
+    bottom: 10%;
+}
+
+.service .service-card .an a {
+    color: #008864;
+}
+
+.service-card .an h4 {
+    color: #008864;
+}
+
+.our-team-section {
+    padding: 20px;
+    display: flex;
+    gap: 10;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.our-team-section div {
+    flex-basis: 40%;
+    margin: 10px;
+}
+
+.our-team-section .team-one {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    color: #008864;
+    font-weight: 400;
+}
+
+.our-team-section .team-one h4,
+.our-team-section .team-one h3 {
+    color: #008864;
+    font-weight: 600;
+}
+
+.our-team-section .team-one p {
+    width: 80%;
+    font-size: 20px;
+}
+
+.nothing {
+    height: 300px;
+}
+
+.our-team-section button {
+    color: white;
+    background: #14ae85;
+    border: none;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.process-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px;
+}
+
+.process-section .process-content {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    text-align: center;
+    align-items: center;
+    margin: 10px;
+    height: 400px;
+    padding: 10px;
+    color: #008864;
+}
+
+.process-content h3 {
+    color: #008864;
+    line-height: 40px;
+}
+
+.process-content p {
+    line-height: 30px;
+}
+
+.process-section .process-content .process-image {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+    background-color: #008864;
+}
+.service-2 button{
+    color: white;
+    background: #14ae85!important;
+    border: none !important;
+    margin-top: 20px;
+    padding: 20px;
+}
+.expertise {
+    display: grid;
+   place-items: center;
+   grid-template-columns: 1fr 1fr;
+    height: 500px;
+    background-image: url(../../images/city.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    font-weight: 600;
+    position:relative;
+}
+.expertise img{
+    width: 85%;
+}
+.fake{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width:100%;
+    background-color: rgb(72, 78, 72);
+    opacity: .3;
+}
+.count-section{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    /* margin: 30px; */
+    padding: 10px;
+    border: 2px solid green;
+   
+}
+
+ .slant-div{
+    height: 550px;
+    background: #14ae85;
+    display: flex;
+}
+.slant1{
+    width: 40%;
+    
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.slant2{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    border-radius: 63% 37% 0% 100% / 100% 0% 100% 0%  ;
+    background:url(../../images/faucenic.jpg);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    width: 60%;
+}
+
+
+
+.count-section .counter-text{
+    flex-basis: 30%;
+    display: flex;
+    border: 2px solid green;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   
+ 
+}
+ .counter-sec{
+    
+    border-radius: 10px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0px 4px 22px -1px #00000014;
+    padding:10px;
+    
+}
+.counter-sec   button {
+    background: #14ae85;;
+    color: white;
+    font-weight: 500;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 40px;
+    
+}
+.counter-sec button a {
+    color: white;
+    font-weight: bold;
+}
+.glass-mum{
+    flex-basis: 70%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 2px solid red;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 400px;
+    position: relative;
+  justify-content: center;
+}
+.first-count{
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.glass-mum #counter,#counter2,#counter3{
+font-size: 25px;
+font-weight: 700;
+text-align: center;
+}
+ .glassy{
+  
+   display: flex;
+   margin: 5px;
+   width: 200px;
+   height: 200px;
+   padding:10px;
+   justify-content: center;
+   align-items: center;
+   border-radius: 50%;
+   color: #008864;
+   box-shadow: rgba(0,0,0,0.56)0px 22px 70px 4px;
+   background-color: white;
+}
+.glassy3{
+    position: absolute;
+    bottom: 10%;
+}
+.glassy h2,.counter-sec h2{
+    color: white;
+    
+
+}
+
+.expertise span {
+    padding: 30px;
+    display: block;
+    font-size: 20px;
+
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.expertise .text{
+    z-index: 10;
+    font-weight: 600;
+    text-align: center;
+}
+
+.expertise #vidmate{
+    width: 80%!important;
+    z-index: 10;
+}
+/* .expertise p {
+    font-size: 20px;
+    width: 80%;
+} */
+
+.people-state {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    color: white;
+    font-weight: 600;
+}
+
+.people-state h3 {
+    color: white;
+    font-weight: 600;
+}
+
+.people-state-kid {
+    margin: 10px;
+}
+
+.people-state .people-state-kid:first-child {
+    background: url(../../images/liberty.jpg);
+    flex-basis: 50%;
+    height: 300px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.people-state .people-state-kid+.people-state-kid {
+    background: #14ae85;
+    padding: 40px;
+    height: 300px;
+    flex-basis: 45%;
+}
+
+.mini h3 {
+    font-weight: 400;
+    z-index: 20;
+    width: 60%;
+}
+
+.ani {
+    background-color: #008864;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: .7;
+}
+
+.people-state img {
+    width: 30%;
+    height: 30%;
+}
+
+/* .video iframe {
+    width: 440px;
+    height: 360px;
+} */
+
+.col-md-offset-2 {
+    height: 200px !important;
+}
+.panel{
+    /* height: 300px !important; */
+    background-color: rgb(120, 116, 116);
+   border-radius: 5px;
+    display: none;
+    height: 0;
+    transition: all 1.5s linear;
+
+}
+.panel .card-description {
+  height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-top: 10px;
+    background: #03423a;
+    border-radius: 10px;
+    padding:10px;
+    transition:all 1.5s linear;
+}
+/* width */
+.panel .card-description::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .panel .card-description::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  .panel .card-description::-webkit-scrollbar-thumb {
+    background:grey; 
+    border-radius: 5px;
+  }
+  
+  /* Handle on hover */
+  .panel .card-description::-webkit-scrollbar-thumb:hover {
+    background: gray; 
+  }
+/* button for scroll */
+.button{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+}
+.button .img{
+    height: 180px;
+    width: 180px;
+}
+.profile{
+    
+    display: none;
+}
+
+.file {
+    
+    height: 300px!important;
+    display: block!important;
+    transition:all .5s linear;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid grey;
+  }
+  .personal-info{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+@media (max-width:768px) {
+    .slant-div{
+        flex-direction: column;
+        height: 720px;
+    }
+    .slant1,.slant2{
+        width: 100%;
+        height: 100%;
+    }
+    .glassy1{
+        position: absolute;
+        top: 1%;
+        left: 1%;
+    }
+    .glassy2{
+        position: absolute;
+        top: 1%;
+        right: 1%;
+    }
+    .glassy3{
+        position: absolute;
+        bottom: 1%;
+        
+    }
+    .count-section{
+       display: grid;
+    }
+    
+
+.count-section .counter-sec {
+    
+    width: 100%;
+    
+}
+    .our-team-section {
+        padding: 20px;
+        display: block;
+    }
+    .nothing {
+        height: 800px;
+    }
+    .header-section {
+        display: grid;
+        margin-bottom: 0px;
+        height: auto;
+    }
+    .header-section .second-child {
+        flex-basis: 40%;
+        display: block;
+        height: 100%;
+        flex-direction: column;
+    }
+    .mini h3 {
+        font-weight: 400;
+        z-index: 20;
+        width: 90%;
+    }
+    .second-child .parent-child {
+        background: black url(../../images/me.html\ and\ wife.jpg);
+        background-size: cover;
+        background-position: center;
+        background-position: fixed;
+        background-clip: padding-box;
+        background-repeat: no-repeat;
+        filter: blur(0);
+        flex-basis: 70%;
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        position: relative;
+    }
+    .second-child .parent-child .text {
+        width: 90%;
+        font-weight: 500;
+        z-index: 20;
+        font-size: 18px;
+        line-height: 20px;
+    }
+    .second-child .parent-child .text h1 {
+        font-size: 2vw;
+    }
+    .second-child .parent-child .title {
+        display: block;
+        font-size: 2vw;
+        margin-bottom: 10px;
+    }
+    .second-child .parent-child2 .text {
+        width: 80%;
+        padding: 50px;
+        flex-direction: column;
+        font-weight: 900;
+        z-index: 20;
+        line-height: 20px;
+    }
+    .second-child .parent-child2 .text h1 {
+        font-size: 4vw;
+    }
+    .parent-child2 .text button {
+        color: #008864;
+        font-weight: 500;
+        padding: 15px 25px;
+        border: none;
+        border-radius: 40px;
+    }
+    .process-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .service {
+        padding: 10px;
+    }
+    .service .service-text {
+        width: 95%;
+        font-weight: 400;
+        font-size: 4vw;
+    }
+    .service-2 {
+        width: 100%;
+        margin: 10px;
+        font-size: 3vw;
+    }
+   
+    .service .service-card {
+        margin-top: 50px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width:480px) {
+    .glass-mum {
+       
+        display: block;
+        
+        margin: auto;
+    }
+    /* .col-md-offset-2{
+        height: 300px !important;
+        overflow: visible;
+    } */
+    .process-section {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+    .nothing {
+        height: 00px;
+    }
+    .service .service-card {
+        margin-top: 50px;
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+    .second-child .parent-child .text h1 {
+        font-size: 4vw;
+    }
+    .second-child .parent-child .title {
+        display: block;
+        font-size: 4vw;
+        margin-bottom: 10px;
+    }
+    .service .service-text {
+        width: 95%;
+        font-weight: 400;
+        font-size: 6vw;
+    }
+    .service-2 {
+        width: 100%;
+        margin: 10px;
+        font-size: 5vw;
+    }
+    .service {
+        height: auto;
+    }
+    .video iframe {
+        width: 340px;
+        height: 260px;
+    }
+    .mini h3 {
+        font-weight: 400;
+        z-index: 20;
+        width: 100%;
+    }
+    .people-state {
+        display: block;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        color: white;
+        font-weight: 600;
+    }
+    .people-state .people-state-kid+.people-state-kid {
+        background: #14ae85;
+        padding: 40px;
+        height: auto;
+    }
+    .expertise{
+        grid-template-columns:1fr;
+    }
+    .glassy{
+        height: 170px;
+        width: 170px;
+    }
+}

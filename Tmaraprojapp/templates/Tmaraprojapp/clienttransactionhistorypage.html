@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="icon" href="{% static 'img/favicon.ico' %}">
+
+	<title>Online Banking</title>
+
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700&amp;subset=latin-ext" rel="stylesheet">
+
+	<!-- CSS - REQUIRED - START -->
+	<!-- Batch Icons -->
+	<link rel="stylesheet" href="{5 static 'bankprojfiles/dashboards/batch-icons.css' %}">
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/bootstrap.min.css' %}">
+	<!-- Material Design Bootstrap -->
+	<link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/mdb.min.css' %}">
+	<!-- Custom Scrollbar -->
+	<link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/jquery.mCustomScrollbar.min.css' %}">
+	<!-- Hamburger Menu -->
+	<link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/hamburgers.css' %}">
+
+	<!-- CSS - REQUIRED - END -->
+
+	<!-- CSS - OPTIONAL - START -->
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/font-awesome.min.css' %}">
+	<!-- JVMaps -->
+	<link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/jqvmap.min.css' %}">
+	<!-- CSS - OPTIONAL - END -->
+
+	<!-- QuillPro Styles -->
+	<link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/quillpro.css' %}">
+	<style type="text/css">
+	.nosamepass {
+  display: none;
+}
+	</style>
+	
+
+
+
+</head>
+
+<body>
+
+	<div class="container-fluid">
+		<div class="row">
+			<nav id="sidebar" class="px-0 bg-dark bg-gradient sidebar">
+				<ul class="nav nav-pills flex-column">
+					<li class="logo-nav-item">
+						<a class="navbar-brand" href="#">
+							<img src="{% static 'img/logo.png' %}" width="145" height="32.3" alt="QuillPro">
+						</a>
+
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'dashboard' %}">
+							<i class="batch-icon batch-icon-browser-alt"></i>
+							Dashboard 
+						</a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'fundtransfer' %}">
+							<i class="batch-icon batch-icon-settings"></i>
+							Fund Transfer
+						</a>
+					
+					<li class="nav-item">
+						<a class="nav-link  active" href="{% url 'transactionhistory' %}">
+							<i class="batch-icon batch-icon-safe"></i>
+							Transaction History <span class="sr-only">(current)</span>
+						</a>
+					</li>
+					
+					
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'transactionhistory' %}">
+							<i class="batch-icon batch-icon-user-card"></i>
+							Account Statement
+						</a>
+					</li>
+					
+					
+				
+					
+					
+						<li class="nav-item">
+						<a class="nav-link" href="{% url 'account_settings' %}">
+							<i class="batch-icon batch-icon-user"></i>
+							My Profile
+						</a>
+					</li>
+					
+					
+						<li class="nav-item">
+						<a class="nav-link" href="{% url 'account_settings' %}">
+							<i class="batch-icon batch-icon-settings"></i>
+							Account Settings
+						</a>
+					</li>
+					
+						<li class="nav-item">
+						<a class="nav-link" href="{% url 'logout' %}">
+							<i class="batch-icon batch-icon-locked"></i>
+							Logout
+						</a>
+					</li>
+					
+				</ul>
+
+				
+
+				
+			</nav>
+			
+            <div class="right-column">
+    
+    <div>
+    
+    <iframe src="//www.exchangerates.org.uk/widget/ER-LRTICKER.php?w=1100&amp;s=1&amp;mc=GBP&amp;mbg=F0F0F0&amp;bs=yes&amp;bc=000044&amp;f=verdana&amp;fs=10px&amp;fc=000044&amp;lc=000044&amp;lhc=FE9A00&amp;vc=FE9A00&amp;vcu=008000&amp;vcd=FF0000&amp;" width="1100" height="30" frameborder="0" scrolling="no" marginwidth="0" marginheight="0"></iframe>
+    
+</div>
+    
+    				<nav class="navbar navbar-expand-lg navbar-light bg-white">
+					<a class="navbar-brand d-block d-sm-block d-md-block d-lg-none" href="#">
+						<img src="{% static 'img/logo.png' %}" width="145" height="32.3" alt="QuillPro">
+					</a>
+					<button class="hamburger hamburger--slider" type="button" data-target=".sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle Sidebar">
+						<span class="hamburger-box">
+							<span class="hamburger-inner"></span>
+						</span>
+					</button>
+					<!-- Added Mobile-Only Menu -->
+					<ul class="navbar-nav ml-auto mobile-only-control d-block d-sm-block d-md-block d-lg-none">
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" id="navbar-notification-search-mobile" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+								<i class="batch-icon batch-icon-search"></i>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-fullscreen" aria-labelledby="navbar-notification-search-mobile">
+								<li>
+									<form class="form-inline my-2 my-lg-0 no-waves-effect">
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="Search for..." aria-label="Search for..." aria-describedby="basic-addon2">
+											<div class="input-group-append">
+												<button class="btn btn-primary btn-gradient waves-effect waves-light" type="button">
+													<i class="batch-icon batch-icon-search"></i>
+												</button>
+											</div>
+										</div>
+									</form>
+								</li>
+							</ul>
+						</li>
+					</ul>
+
+					<!--  DEPRECATED CODE:
+						<div class="navbar-collapse" id="navbarSupportedContent">
+					-->
+					<!-- USE THIS CODE Instead of the Commented Code Above -->
+					<!-- .collapse added to the element -->
+					<div class="collapse navbar-collapse" id="navbar-header-content">
+						<ul class="navbar-nav navbar-language-translation mr-auto">
+						
+						<div id="google_translate_element"></div>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+						
+						</ul>
+						<ul class="navbar-nav navbar-notifications float-right">
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" id="navbar-notification-search" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+									<i class="batch-icon batch-icon-search"></i>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-fullscreen" aria-labelledby="navbar-notification-search">
+									<li>
+										<form class="form-inline my-2 my-lg-0 no-waves-effect">
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Search for..." aria-label="Search for..." aria-describedby="basic-addon2">
+												<div class="input-group-append">
+													<button class="btn btn-primary btn-gradient waves-effect waves-light" type="button">Search</button>
+												</div>
+											</div>
+										</form>
+									</li>
+								</ul>
+							</li>
+							
+						<ul class="navbar-nav ml-5 navbar-profile">
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" id="navbar-dropdown-navbar-profile" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+									<div class="profile-name">
+										{{ request.user.username }}									</div>
+									<div class="profile-picture bg-gradient bg-primary has-message float-right">
+										
+                                        <img src="{{request.user.client.profile_picUrl}}" width="44" height="44">                                        
+									</div>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-dropdown-navbar-profile">
+									<li><a class="dropdown-item" href="{% url 'account_settings' %}">Profile</a></li>
+									<li>
+										<a class="dropdown-item" href="{% url 'contact' %}">
+											Messages 
+											<span class="badge badge-danger badge-pill float-right"></span>
+										</a>
+									</li>
+									<li><a class="dropdown-item" href="{% url 'account_settings' %}">Settings</a></li>
+									<li><a class="dropdown-item" href="{% url 'logout' %}"><div style="color:#F00">Logout</div></a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</nav>            
+				<main class="main-content p-5" role="main">
+				
+				
+				<div class="row">
+						<div class="col-md-6 col-lg-6 col-xl-3 mb-5">
+							<div class="card card-tile card-xs bg-primary bg-gradient text-center">
+								<div class="card-body p-4">
+									<!-- Accepts .invisible: Makes the items. Use this only when you want to have an animation called on it later -->
+									<div class="tile-left">
+										<i class="batch-icon batch-icon-user batch-icon-xxl"></i>
+									</div>
+									<div class="tile-right">
+									<div class="tile-description">Account Number</div>
+										<div class="tile-number">{{clientAccountNumber}}</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-lg-6 col-xl-3 mb-5">
+							<div class="card card-tile card-xs bg-secondary bg-gradient text-center">
+								<div class="card-body p-4">
+									<div class="tile-left">
+										
+										<i class="batch-icon batch-icon-list batch-icon-xxl"></i>
+									</div>
+									<div class="tile-right">
+									<div class="tile-description">Account Type</div>
+										<div class="tile-number">{{clientAccountType}}</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-lg-6 col-xl-3 mb-5">
+							<div class="card card-tile card-xs bg-primary bg-gradient text-center">
+								<div class="card-body p-4">
+									<div class="tile-left">
+									</div>
+									<div class="tile-right">
+									<div class="tile-description">Account Balance</div>
+										<div class="tile-number">
+										$ {{clientBalance}}												</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-lg-6 col-xl-3 mb-5">
+							<div class="card card-tile card-xs bg-secondary bg-gradient text-center">
+								<div class="card-body p-4">
+									<div class="tile-left">
+										<i class="batch-icon batch-icon-star batch-icon-xxl"></i>
+									</div>
+									<div class="tile-right">
+									<div class="tile-description">Account Currency</div>
+										<div class="tile-number"> {{clientAccountCurrency}}</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+			  </div>
+					
+					<div class="row">
+			        <div class="col-md-12 mb-5">
+			          <div class="card">
+			            <div class="card-header">
+			              Transaction History			              </div>
+			            <div class="card-table table-responsive">
+			              <table class="table table-hover align-middle">
+			                <thead class="thead-light">
+			                  <tr>
+			                    <th width="25%">Destination Account</th>
+					              <th width="12%">Destination Account Number</th>
+					              <th width="33%">Account Name</th>
+					              <th width="14%">Amount</th>
+					              <th width="16%">Current Balance</th>
+				              </tr>
+		                    </thead>
+							<tbody>
+			                    {% for i in transactions %}
+			                    <tr>
+
+			                        <td>{{i.bank_name}}</td>
+			                        <td><span class='badge badge-success'></span>{{i.account_number}} </td>
+			                        <td>{{i.account_name}}</td>
+			                        <td>{{i.amount}}</td>
+			                        <td>{{clientBalance}}</td>
+		                        </tr>
+		                        {% endfor %}
+			                </tbody>
+		                  </table>
+		                </div>
+		              </div>
+		          </div>
+		        </div>
+					
+		  </div>
+					
+				</main>
+	  </div>
+</div>
+	</div>
+
+	<!-- SCRIPTS - REQUIRED START -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!-- Bootstrap core JavaScript -->
+	<!-- JQuery -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery-3.1.1.min.js' %}"></script>
+	<!-- Popper.js - Bootstrap tooltips -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/popper.min.js' %}"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/bootstrap.min.js' %}"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/mdb.min.js' %}"></script>
+	<!-- Velocity -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/velocity.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/velocity.ui.min.js' %}"></script>
+	<!-- Custom Scrollbar -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+	<!-- jQuery Visible -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.visible.min.js' %}"></script>
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/ie10-viewport-bug-workaround.js' %}"></script>
+
+	<!-- SCRIPTS - REQUIRED END -->
+
+	<!-- ChartJS -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/chart.bundle.min.js' %}"></script>
+	<!-- JVMaps -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.vmap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.vmap.usa.js' %}"></script>
+
+	<!-- SCRIPTS - OPTIONAL START -->
+	<!-- Image Placeholder -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/holder.min.js' %}"></script>
+	<!-- SCRIPTS - OPTIONAL END -->
+
+	<!-- QuillPro Scripts -->
+	<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/scripts.js' %}"></script>
+		<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.form-validator.min.js' %}"></script>
+			<script type="text/javascript" src="{% static 'bankprojfiles/dashboards/forms-validation.js' %}"></script>
+			
+
+<script type="text/javascript">
+
+$("#code_numb").keyup(function() {
+  if ($("#pass1").val() != $("#code_numb").val()) {
+    $(".nosamepass").fadeIn('slow');
+    $("#choosepass > input").css("border", "1px solid #ff0033");
+	$("#submit").prop('disabled',true);
+  } else {
+    $(".nosamepass").fadeOut('slow');
+    $("#choosepass > input").css("border", "1px solid #232323");
+	$("#submit").prop('disabled',false);
+  }
+});
+
+</script>
+
+
+
+
+
+</body>
+
+</html>
+

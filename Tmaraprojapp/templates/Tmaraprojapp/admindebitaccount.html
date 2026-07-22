@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="icon" href="{% static 'img/favicon.ico' %}">
+      <title>Online Banking</title>
+      <!-- Fonts -->
+      <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700&amp;subset=latin-ext" rel="stylesheet">
+      <!-- CSS - REQUIRED - START -->
+      <!-- Batch Icons -->
+      <link rel="stylesheet" href="{5 static 'bankprojfiles/dashboards/batch-icons.css' %}">
+      <!-- Bootstrap core CSS -->
+      <link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/bootstrap.min.css' %}">
+      <!-- Material Design Bootstrap -->
+      <link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/mdb.min.css' %}">
+      <!-- Custom Scrollbar -->
+      <link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/jquery.mCustomScrollbar.min.css' %}">
+      <!-- Hamburger Menu -->
+      <link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/hamburgers.css' %}">
+      <!-- CSS - REQUIRED - END -->
+      <!-- CSS - OPTIONAL - START -->
+      <!-- Font Awesome -->
+      <link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/font-awesome.min.css' %}">
+      <!-- JVMaps -->
+      <link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/jqvmap.min.css' %}">
+      <!-- CSS - OPTIONAL - END -->
+      <!-- QuillPro Styles -->
+      <link rel="stylesheet" href="{% static 'bankprojfiles/dashboards/quillpro.css' %}">
+      <style type="text/css">
+         .nosamepass {
+         display: none;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="container-fluid">
+         <div class="row">
+            <nav id="sidebar" class="px-0 bg-dark bg-gradient sidebar">
+               <ul class="nav nav-pills flex-column">
+                  <li class="logo-nav-item">
+                     <a class="navbar-brand" href="#">
+                     <img src="{% static 'img/logo.png' %}" width="145" height="32.3" alt="QuillPro">
+                     </a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'admindashboard' %}">
+                     <i class="batch-icon batch-icon-browser-alt"></i>
+                     Dashboard <span class="sr-only">(current)</span>
+                     </a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'logout' %}">
+                     <i class="batch-icon batch-icon-locked"></i>
+                     Logout
+                     </a>
+                  </li>
+               </ul>
+            </nav>
+            <div class="right-column">
+               <div>
+                  <iframe src="//www.exchangerates.org.uk/widget/ER-LRTICKER.php?w=1100&amp;s=1&amp;mc=GBP&amp;mbg=F0F0F0&amp;bs=yes&amp;bc=000044&amp;f=verdana&amp;fs=10px&amp;fc=000044&amp;lc=000044&amp;lhc=FE9A00&amp;vc=FE9A00&amp;vcu=008000&amp;vcd=FF0000&amp;" width="1100" height="30" frameborder="0" scrolling="no" marginwidth="0" marginheight="0"></iframe>
+               </div>
+               <nav class="navbar navbar-expand-lg navbar-light bg-white">
+                  <a class="navbar-brand d-block d-sm-block d-md-block d-lg-none" href="#">
+                  <img src="{% static 'img/logo.png' %}" width="145" height="32.3" alt="QuillPro">
+                  </a>
+                  <button class="hamburger hamburger--slider" type="button" data-target=".sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle Sidebar">
+                  <span class="hamburger-box">
+                  <span class="hamburger-inner"></span>
+                  </span>
+                  </button>
+                  <!-- Added Mobile-Only Menu -->
+                  <ul class="navbar-nav ml-auto mobile-only-control d-block d-sm-block d-md-block d-lg-none">
+                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbar-notification-search-mobile" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+                        <i class="batch-icon batch-icon-search"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-fullscreen" aria-labelledby="navbar-notification-search-mobile">
+                           <li>
+                              <form class="form-inline my-2 my-lg-0 no-waves-effect">
+                                 <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for..." aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                       <button class="btn btn-primary btn-gradient waves-effect waves-light" type="button">
+                                       <i class="batch-icon batch-icon-search"></i>
+                                       </button>
+                                    </div>
+                                 </div>
+                              </form>
+                           </li>
+                        </ul>
+                     </li>
+                  </ul>
+                  <!--  DEPRECATED CODE:
+                     <div class="navbar-collapse" id="navbarSupportedContent">
+                     -->
+                  <!-- USE THIS CODE Instead of the Commented Code Above -->
+                  <!-- .collapse added to the element -->
+                  <div class="collapse navbar-collapse" id="navbar-header-content">
+                     <ul class="navbar-nav navbar-language-translation mr-auto">
+                        <div id="google_translate_element"></div>
+                        <script type="text/javascript">
+                           function googleTranslateElementInit() {
+                             new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+                           }
+                        </script>
+                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                     </ul>
+                     <ul class="navbar-nav navbar-notifications float-right">
+                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbar-notification-search" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+                        <i class="batch-icon batch-icon-search"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-fullscreen" aria-labelledby="navbar-notification-search">
+                           <li>
+                              <form class="form-inline my-2 my-lg-0 no-waves-effect">
+                                 <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for..." aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                       <button class="btn btn-primary btn-gradient waves-effect waves-light" type="button">Search</button>
+                                    </div>
+                                 </div>
+                              </form>
+                           </li>
+                        </ul>
+                     </li>
+                  </div>
+               </nav>
+               <main class="main-content p-5" role="main">
+                  <div class="row">
+                     <strong style="padding-left:10px;">QUICK MONEY TRANSFER</strong>
+                  </div>
+                  <div >
+                     <form action="" method="POST" id="transfer">
+                        {% csrf_token %}
+                        <td colspan="2">
+                           <div class="form-group">
+                              <input type="number" class="form-control" style="margin-bottom:0px;" name="amount" id="routnumber" placeholder="Enter amount">
+                           </div>
+                        </td>
+                        </tr>
+                        <span style="margin-left:10px;">
+                        <input name="submit" type="submit" value="Debit account" class="btn btn-primary" id="submit">
+                        </span>
+                     </form>
+                  </div>
+            </div>
+         </div>
+      </div>
+      </div>
+      </main>
+      </div>
+      </div>
+      </div>
+      <!-- SCRIPTS - REQUIRED START -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <!-- Bootstrap core JavaScript -->
+      <!-- JQuery -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery-3.1.1.min.js' %}"></script>
+      <!-- Popper.js - Bootstrap tooltips -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/popper.min.js' %}"></script>
+      <!-- Bootstrap core JavaScript -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/bootstrap.min.js' %}"></script>
+      <!-- MDB core JavaScript -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/mdb.min.js' %}"></script>
+      <!-- Velocity -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/velocity.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/velocity.ui.min.js' %}"></script>
+      <!-- Custom Scrollbar -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+      <!-- jQuery Visible -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.visible.min.js' %}"></script>
+      <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/ie10-viewport-bug-workaround.js' %}"></script>
+      <!-- SCRIPTS - REQUIRED END -->
+      <!-- ChartJS -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/chart.bundle.min.js' %}"></script>
+      <!-- JVMaps -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.vmap.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.vmap.usa.js' %}"></script>
+      <!-- SCRIPTS - OPTIONAL START -->
+      <!-- Image Placeholder -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/holder.min.js' %}"></script>
+      <!-- SCRIPTS - OPTIONAL END -->
+      <!-- QuillPro Scripts -->
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/scripts.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/jquery.form-validator.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bankprojfiles/dashboards/forms-validation.js' %}"></script>
+      <script type="text/javascript">
+         $("#amount").focusout(function(){
+         
+         
+          if(parseFloat($("#prebalance").val()) < parseFloat($("#amount").val()))
+          {
+              $(".error").css("display","block").css("color","red");
+              $("#submit").prop('disabled',true);
+          }
+          else {
+              $(".error").css("display","none");
+              $("#submit").prop('disabled',false);
+          }
+         
+         });
+         
+      </script>
+      <script type="text/javascript">
+         $(document).ready(function(){
+             $(".input").keyup(function(){
+                   var val1 = +$(".value1").val();
+                   var val2 = +$(".value2").val();
+                   $("#balance").val(val1-val2);
+            });
+         });
+      </script>
+      <script type="text/javascript">
+         $('input[name="amount"]').keyup(function(e)
+                                         {
+           if (/\D/g.test(this.value))
+           {
+             // Filter non-digits from input value.
+             this.value = this.value.replace(/\D/g, '');
+           }
+         });
+         
+         
+         $('input[name="acctnumber"]').keyup(function(e)
+                                         {
+           if (/\D/g.test(this.value))
+           {
+             // Filter non-digits from input value.
+             this.value = this.value.replace(/\D/g, '');
+           }
+         });
+      </script>
+      <script type="text/javascript">
+         $("#pass2").keyup(function() {
+           if ($("#pass1").val() != $("#pass2").val()) {
+             $(".nosamepass").fadeIn('slow');
+             $("#choosepass > input").css("border", "1px solid #ff0033");
+         	$("#submit").prop('disabled',true);
+           } else {
+             $(".nosamepass").fadeOut('slow');
+             $("#choosepass > input").css("border", "1px solid #232323");
+         	$("#submit").prop('disabled',false);
+           }
+         });
+         
+      </script>
+   </body>
+</html>

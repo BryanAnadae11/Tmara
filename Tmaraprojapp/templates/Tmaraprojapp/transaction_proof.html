@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Successful</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f4f4f9;
+    }
+
+    .receipt-container {
+      width: 360px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .success-icon {
+      color: #4caf50;
+      font-size: 50px;
+      margin-bottom: 10px;
+    }
+
+    .receipt-container h2 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .receipt-details {
+      margin: 15px 0;
+      text-align: left;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .receipt-details p {
+      margin-bottom: 8px;
+    }
+
+    .total-amount {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+    }
+
+    .button-container {
+      margin-top: 20px;
+    }
+
+    .print-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .print-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt-container">
+    <div class="success-icon">&#10004;</div>
+    <h2>Transaction Successful</h2>
+    <div class="receipt-details">
+      <p><strong>Amount Sent:</strong> <span id="transactionAmount">${{amount_sent}}</span></p>
+      <p><strong>Account Number:</strong> <span id="">{{account_number}}</span></p>
+      <p><strong>Bank Name:</strong> <span id="">{{bank_name}}</span></p>
+      <p><strong>Payment Method:</strong> <span id="paymentMethod">B2B Transfer</span></p>
+      <p><strong>Date:</strong> <span id="transactionDate">---</span></p>
+      <p><strong>Transaction ID:</strong> <span id="transactionId">---</span></p>
+    </div>
+    <div class="total-amount">
+      <p><strong>Total Amount:</strong> <span id="transactionAmount">${{amount_sent}}</span></p>
+    </div>
+    <div class="button-container">
+      <button class="print-button" onclick="printReceipt()">Print Receipt</button>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript to handle print button
+    function printReceipt() {
+      window.print();
+    }
+
+    // Optional: Populate receipt details dynamically
+    const transactionId = "TRX-" + Math.floor(Math.random() * 1000000000);
+    const currentDate = new Date().toLocaleDateString("en-US", {
+      year: 'numeric', month: 'short', day: 'numeric'
+    });
+
+    document.getElementById("transactionId").innerText = transactionId;
+    document.getElementById("transactionDate").innerText = currentDate;
+  </script>
+</body>
+</html>

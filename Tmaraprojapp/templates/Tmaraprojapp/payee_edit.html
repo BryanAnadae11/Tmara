@@ -1,0 +1,51 @@
+{% extends "Tmaraprojapp/base.html" %}
+{% block title %}Edit Payee — My Bank{% endblock %}
+{% block nav_payees %}nav-item--active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">Edit Payee</h1>
+</div>
+
+<div class="content-card">
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="payee_name">Payee name</label>
+      <input type="text" id="payee_name" name="name" value="{{ payee.name }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Sort code</label>
+      <input type="text" name="sort_code_1" value="{{ sort_code_1 }}" maxlength="2" size="2" required>
+      <input type="text" name="sort_code_2" value="{{ sort_code_2 }}" maxlength="2" size="2" required>
+      <input type="text" name="sort_code_3" value="{{ sort_code_3 }}" maxlength="2" size="2" required>
+    </div>
+
+    <div class="form-group">
+      <label for="payee_account_number">Account number</label>
+      <input type="text" id="payee_account_number" name="account_number" value="{{ payee.account_number }}" maxlength="8" required>
+    </div>
+
+    <div class="form-group">
+      <label for="payee_reference">Reference</label>
+      <input type="text" id="payee_reference" name="reference" value="{{ payee.reference }}">
+    </div>
+
+    <div class="action-row">
+      <a class="back-link" href="{% url 'payee_list' %}">← Cancel</a>
+      <button type="submit">Save changes</button>
+    </div>
+  </form>
+</div>
+
+<div class="content-card" style="margin-top:20px;border-color:rgba(229,57,53,0.2);">
+  <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;">
+    Removing this payee means you'll need to add them again before paying them.
+  </p>
+  <form method="post" action="{% url 'payee_delete' payee.pk %}" onsubmit="return confirm('Are you sure you want to remove this payee?');">
+    {% csrf_token %}
+    <button type="submit" class="btn" style="background:var(--accent-red);color:#fff;">Delete this payee</button>
+  </form>
+</div>
+{% endblock %}

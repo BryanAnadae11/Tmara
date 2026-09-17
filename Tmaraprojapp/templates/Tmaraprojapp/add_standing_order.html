@@ -1,0 +1,64 @@
+{% extends "Tmaraprojapp/base.html" %}
+{% block title %}Set Up a Payment — My Bank{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">Set up a payment</h1>
+</div>
+
+<div class="content-card">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>Pay
+        <select name="payee_id" required>
+          {% for p in payees %}
+            <option value="{{ p.id }}">{{ p.name }} — {{ p.masked_account }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>Amount £ <input type="number" step="0.01" name="amount" required></label>
+    </div>
+    <div class="form-group">
+      <label>First payment <input type="date" name="first_payment_date" value="{{ today }}" required></label>
+    </div>
+
+    <div class="form-group">
+      <label>Frequency
+        <select name="frequency">
+          <option value="weekly">Weekly</option>
+          <option value="monthly" selected>Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </label>
+    </div>
+
+    <fieldset>
+      <legend>End date</legend>
+      <label class="radio-row"><input type="radio" name="end_type" value="never" checked onclick="toggleEnd()"> Never</label>
+      <label class="radio-row"><input type="radio" name="end_type" value="specific" onclick="toggleEnd()"> On a specific date</label>
+      <input type="date" name="end_date" id="end_date" style="display:none;">
+    </fieldset>
+
+    <div class="form-group">
+      <label>Reference <input type="text" name="reference" value="Monthly payment"></label>
+    </div>
+
+    <button type="submit">Continue</button>
+  </form>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+function toggleEnd() {
+  const isSpecific = document.querySelector('input[name=end_type]:checked').value === 'specific';
+  const endDateInput = document.getElementById('end_date');
+  endDateInput.style.display = isSpecific ? 'inline-block' : 'none';
+  if (!isSpecific) {
+    endDateInput.value = '';
+  }
+}
+</script>
+{% endblock %}

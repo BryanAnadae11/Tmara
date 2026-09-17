@@ -1,0 +1,18 @@
+{% extends "Tmaraprojapp/base.html" %}
+{% block title %}Confirm with your PIN — My Bank{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">Confirm with your PIN</h1>
+</div>
+
+<div class="content-card" style="max-width:360px;">
+  {% if error %}<p style="color:var(--accent-red);margin-bottom:16px;">{{ error }}</p>{% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <input type="password" name="pin" maxlength="4" inputmode="numeric" required autofocus style="text-align:center;letter-spacing:0.5em;font-size:20px;">
+    </div>
+    <button type="submit" style="width:100%;">Authorize payment</button>
+  </form>
+</div>
+{% endblock %}

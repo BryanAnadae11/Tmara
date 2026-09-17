@@ -64,7 +64,7 @@
          <div class="container d-flex align-items-center">
             <!-- <h1 class="logo me-auto"><a href="{% url 'home' %}">🍃Valon Global<span>.</span></a></h1> -->
             <!-- Uncomment below if you prefer to use an image logo -->
-            <a href="{% url 'home' %}" class="logo me-auto"><img src="/static/lionhead.png" alt="" style="width: 60px;"></a>
+            <a href="{% url 'home' %}" class="logo me-auto"><span style="font-weight:800;letter-spacing:0.1em;">VGB</span></a>
             <nav id="navbar" class="navbar order-last order-lg-0">
                <ul>
                   <li><a class="nav-link scrollto active" href="{% url 'home' %}">Home</a></li>
@@ -118,6 +118,7 @@
                   
                   <p>Provide your credentials to access your Valon Global Account</p>
                   <form method="POST">
+                     {% csrf_token %}
 
                      <div class="form-group" style="margin-top: 5px;">
                       <label for="exampleInputEmail1">User ID</label>
@@ -132,7 +133,7 @@
 
                     <div class="form-group">
                       <label for="exampleInputPassword1">Password</label>
-                      <input id="password" type="passw" placeholder="Password"
+                      <input id="password" type="password" placeholder="Password"
                       class="form-control "
                       name="password" required>
 

@@ -1,0 +1,48 @@
+{% extends "Tmaraprojapp/base.html" %}
+{% block title %}Transfer Money — My Bank{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">Transfer money</h1>
+</div>
+
+<div class="content-card">
+  <form method="post">
+    {% csrf_token %}
+    <p class="page-subtitle">From: {{ client.account_type }} — Balance: £{{ client.deposit }}</p>
+
+    <div class="form-group">
+      <label>To
+        <select name="payee_id" required>
+          {% for p in payees %}
+            <option value="{{ p.id }}">{{ p.name }} — {{ p.masked_account }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>Amount £ <input type="number" step="0.01" name="amount" required></label>
+    </div>
+    <div class="form-group">
+      <label>Reference <input type="text" name="reference"></label>
+    </div>
+
+    <fieldset>
+      <legend>When should this transfer be made?</legend>
+      <label class="radio-row"><input type="radio" name="when" value="today" checked onclick="toggleDate()"> Today</label>
+      <label class="radio-row"><input type="radio" name="when" value="later" onclick="toggleDate()"> Later</label>
+      <input type="date" name="payment_date" id="payment_date" value="{{ today }}" style="display:none;">
+    </fieldset>
+
+    <button type="submit">Continue</button>
+  </form>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+function toggleDate() {
+  const isLater = document.querySelector('input[name=when]:checked').value === 'later';
+  document.getElementById('payment_date').style.display = isLater ? 'inline-block' : 'none';
+}
+</script>
+{% endblock %}

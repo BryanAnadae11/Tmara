@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from django.core.mail import BadHeaderError, send_mail
 
@@ -30,6 +30,8 @@ from django.utils import timezone
 
 from .decorators import check_account_status
 
+from .models import *
+
 # Create your views here.
 
 def home(request):
@@ -59,6 +61,7 @@ def insurance(request):
 def faq(request):
 	return render(request, 'Tmaraprojapp/faq.html')
 
+@login_required(login_url='clientsignin')
 def card(request):
 	return render(request, 'Tmaraprojapp/card.html')
 
@@ -91,6 +94,7 @@ def about(request):
 def news(request):
 	return render(request, 'Tmaraprojapp/news.html')
 
+
 @login_required(login_url='clientsignin')
 @check_account_status
 def dashboard(request):
@@ -102,8 +106,36 @@ def dashboard(request):
 		clientAccountType= client.account_type
 		clientAccountCurrency= client.account_currency
 		clientBalance= float(client.deposit) + float(client.uncleared_balance)
-	context={'clientAccountNumber':clientAccountNumber, 'clientAccountType':clientAccountType, 'clientBalance':clientBalance, 'clientAccountCurrency':clientAccountCurrency}
-	return render(request, 'Tmaraprojapp/clientdashboard.html', context)
+
+		domestic = Transaction.objects.filter(client=client).order_by('-date_created')[:5]
+		foreign = Foreign_transaction.objects.filter(client=client).order_by('-date_created')[:5]
+
+		recentTransactions = []
+		for t in domestic:
+			recentTransactions.append({
+				'description': t.destination_account_name or 'Domestic transfer',
+				'category': 'Reversal' if t.is_reversal else 'Domestic transfer',
+				'amount': t.amount if t.is_reversal else -t.amount,
+				'date_created': t.date_created,
+				'status': t.get_status_display(),
+				'status_code': t.status,
+			})
+		for f in foreign:
+			recentTransactions.append({
+				'description': f.account_name or 'International transfer',
+				'category': 'Reversal' if f.is_reversal else f"International — {f.country}" if f.country else 'International transfer',
+				'amount': f.amount if f.is_reversal else -f.amount,
+				'date_created': f.date_created,
+				'status': f.get_status_display(),
+				'status_code': f.status,
+			})
+
+		recentTransactions.sort(key=lambda row: row['date_created'] or timezone.now(), reverse=True)
+		recentTransactions = recentTransactions[:5]
+
+	context={'clientAccountNumber':clientAccountNumber, 'clientAccountType':clientAccountType, 'clientBalance':clientBalance,
+	'clientAccountCurrency':clientAccountCurrency, 'recentTransactions':recentTransactions}
+	return render(request, 'Tmaraprojapp/dashboard.html', context)
 
 @login_required(login_url='clientsignin')
 def account_settings(request):
@@ -114,48 +146,16 @@ def account_settings(request):
 		if form.is_valid():
 			form.save()
 	context= {'form':form}
-	return render(request, 'Tmaraprojapp/clientaccountsettings.html', context)
+	return render(request, 'Tmaraprojapp/profile_settings.html', context)
+
+
+
+from decimal import Decimal, InvalidOperation
 
 @login_required(login_url='clientsignin')
 def fundtransfer(request):
-	client= request.user.client
-	clientAccountNumber= client.account_number
-	clientAccountType= client.account_type
-	clientAccountCurrency= client.account_currency
-	canClientTransfer = client.active_transfer
-	clientBalance= float(client.deposit) + float(client.uncleared_balance)
-	if request.method == 'POST' and canClientTransfer == True:
-		destination_account_name= request.POST.get('account_name')
-		destination_bank_name= request.POST.get('bank_name')
-		destination_bank_code= request.POST.get('bank_code')
-		destination_bank_routing_number= request.POST.get('routing_number')
-		destination_country= request.POST.get('country')
-		destination_account_number= request.POST.get('account_number')
-		amount= request.POST.get('amount')
-		transfer_pin= request.POST.get('transfer_pin')
-		if float(client.deposit) > float(amount):
-			client_transfer_pin= client.transfer_pin
-			if str(client_transfer_pin) == str(transfer_pin):
-				Foreign_transaction.objects.create(
-					client= client,
-					bank_name= destination_bank_name,
-					country= destination_country,
-					account_name=destination_account_name,
-					bank_code=destination_bank_code,
-					routing_number=destination_bank_routing_number,
-					account_number= destination_account_number,
-					amount= amount,
-					)
-				return redirect('foreign_transaction')
-			else:
-				return HttpResponse('Incorrect transfer pin. Try setting a transfer pin in your account settings')
-		else:
-			return HttpResponse('Your balance is too low to complete this transaction')
-	else:
-		return HttpResponse('Invalid Transfer Request. Please Contact Support')
+	return redirect('payee_list')
 
-	context={'clientAccountNumber':clientAccountNumber, 'clientAccountType':clientAccountType, 'clientBalance':clientBalance, 'clientAccountCurrency':clientAccountCurrency}
-	return render(request, 'Tmaraprojapp/clienttransferpage.html', context)
 
 @login_required(login_url='clientsignin')
 def foreign_transaction(request):
@@ -215,16 +215,50 @@ def foreign_transaction(request):
 	context={}
 	return render(request, 'Tmaraprojapp/foreign_transaction.html', context)
 
+@login_required(login_url='clientsignin')
 def transactionhistory(request):
 	client= request.user.client
 	clientAccountNumber= client.account_number
 	clientAccountType= client.account_type
 	clientAccountCurrency= client.account_currency
 	clientBalance= float(client.deposit) + float(client.uncleared_balance)
-	transactions= Foreign_transaction.objects.filter(client=client)
+
+	domestic = Transaction.objects.filter(client=client)
+	foreign = Foreign_transaction.objects.filter(client=client)
+
+	normalized = []
+	for t in domestic:
+		normalized.append({
+			'bank_name': '',
+			'account_number': t.destination_account_number,
+			'account_name': t.destination_account_name,
+			'amount': t.amount,
+			'date_created': t.date_created,
+			'status': t.get_status_display(),
+			'status_code': t.status,
+			'is_reversal': t.is_reversal,
+		})
+	for f in foreign:
+		normalized.append({
+			'bank_name': f.bank_name,
+			'account_number': f.account_number,
+			'account_name': f.account_name,
+			'amount': f.amount,
+			'date_created': f.date_created,
+			'status': f.get_status_display(),
+			'status_code': f.status,
+			'is_reversal': f.is_reversal,
+		})
+
+	transactions = sorted(
+		normalized,
+		key=lambda row: row['date_created'] or timezone.now(),
+		reverse=True,
+	)
+
 	context={'clientAccountNumber':clientAccountNumber, 'clientAccountType':clientAccountType, 'clientBalance':clientBalance,
 	'clientAccountCurrency':clientAccountCurrency, 'transactions':transactions}
-	return render(request, 'Tmaraprojapp/clienttransactionhistorypage.html', context)
+	return render(request, 'Tmaraprojapp/Transactionhistory.html', context)
 
 
 @login_required
@@ -256,7 +290,7 @@ def account_questions_validate(request):
 	else:
 		form = FormClass()
 
-	template = 'account_questions_setup.html' if first_time else 'account_questions_verify.html'
+	template = 'Tmaraprojapp/account_questions_setup.html' if first_time else 'Tmaraprojapp/account_questions_verify.html'
 	return render(request, template, {'form': form, 'first_time': first_time})
 
 
@@ -308,34 +342,54 @@ def admingotouserprofile(request, pk):
 @login_required(login_url='clientsignin')
 @staff_member_required
 def admincreditaccount(request, pk):
-	client= Client.objects.get(id=pk)
-	client_deposit= client.deposit
-	client_id= client.id
-	firstName= client.first_name
-	email= client.email
-	acc_currency= client.account_currency
-	if request.method == 'POST':
-		amount= request.POST.get('amount')
-		if amount:
-			newacc_bal= float(client_deposit) + float(amount)
-			client_info= Client.objects.filter(id=client_id)
-			client_info.update(deposit=newacc_bal)
-			template= render_to_string('Tmaraprojapp/creditalert.html', {'name':firstName, 'newacc_bal':newacc_bal, 'acc_currency':acc_currency})
-			plain_message= strip_tags(template)
-			email_message= EmailMultiAlternatives(
-				'Credit on your account!',
-				template,
-				settings.EMAIL_HOST_USER,
-				[email]
-				)
-			email_message.attach_alternative(template, 'text/html')
-			email_message.send()
-			return HttpResponse('Account credited successfully')
-		else:
-			return HttpResponse('Enter an amount in Euros')
-	print(client_deposit)
-	context={}
-	return render(request, 'Tmaraprojapp/admincreditaccount.html', context)
+    # 1. Safely fetch client instance or return a clean 404 page if missing
+    client = get_object_or_404(Client, id=pk)
+
+    if request.method == 'POST':
+        raw_amount = request.POST.get('amount')
+        
+        if raw_amount:
+            try:
+                # Convert both values to Decimal for reliable mathematical calculations
+                amount = Decimal(str(raw_amount))
+                current_deposit = Decimal(str(client.deposit or 0))
+                
+                if amount <= 0:
+                    return HttpResponse('Credit amount must be greater than zero.', status=400)
+                
+                # Perform arithmetic operation
+                newacc_bal = current_deposit + amount
+                
+                # 2. Update model directly on the instance to guarantee .save() trigger execution
+                client.deposit = newacc_bal
+                client.save()  # Triggers tracking mechanisms and custom save logic
+                
+                # 3. Build email configurations cleanly
+                template = render_to_string('Tmaraprojapp/creditalert.html', {
+                    'name': client.first_name, 
+                    'newacc_bal': newacc_bal, 
+                    'acc_currency': client.account_currency
+                })
+                plain_message = strip_tags(template)
+                
+                email_message = EmailMultiAlternatives(
+                    subject='Credit on your account!',
+                    body=plain_message,  # FIX: Sent clean text version for strict mail parsers
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[client.email]
+                )
+                email_message.attach_alternative(template, 'text/html')
+                email_message.send()
+                
+                return HttpResponse('Account credited successfully')
+                
+            except (ValueError, InvalidOperation):
+                return HttpResponse('Invalid numeric amount entered.', status=400)
+        else:
+            return HttpResponse('Enter an amount to credit.', status=400)
+    return render(request, 'Tmaraprojapp/admincreditaccount.html')
+
+
 
 @login_required(login_url='clientsignin')
 @staff_member_required
@@ -377,7 +431,7 @@ def clientsignin(request):
 	else:
 		if request.method == "POST":
 			username= request.POST.get('username')
-			password= request.POST.get('passw')
+			password= request.POST.get('password')
 
 			user= authenticate(request, username=username, password=password)
 
@@ -428,34 +482,7 @@ def verify_otp(request):
         form = OTPForm()
 
     return render(request, 'Tmaraprojapp/verify_otp.html', {'form': form})
-'''
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
-        if user:
-            # Generate OTP
-            otp = str(random.randint(100000, 999999))
-
-            EmailOTP.objects.update_or_create(user=user, defaults={'otp_code': otp})
-
-            # Send OTP
-            send_mail(
-                subject='Your OTP Code',
-                message=f'Your OTP is {otp}',
-                from_email='no-reply@yourapp.com',
-                recipient_list=[user.email],
-                fail_silently=False,
-            )
-
-            request.session['pre_2fa_user_id'] = user.id
-            return redirect('verify_otp')
-        else:
-            return render(request, 'login.html', {'error': 'Invalid credentials'})
-    return render(request, 'login.html')
-'''
 
 def signup(request):
 	user_check = request.user.is_authenticated
@@ -494,7 +521,7 @@ def signup(request):
 		second_email_message.send()
 
 		try:
-			send_mail(username, "A client with username: {} has just signed up on your site with email: {}".format(username, email),settings.EMAIL_HOST_USER, ['customercare@unicreditpay.com'])
+			send_mail(username, "A client with username: {} has just signed up on your site with email: {}".format(username, email),settings.EMAIL_HOST_USER, ['support@valonglobal.com'])
 		except BadHeaderError:
 			return HttpResponse("Your account has been created but you can't login at this time. please, try to login later")
 		user= authenticate(username=username, password=password)
@@ -506,8 +533,451 @@ def signup(request):
 @login_required
 def blocked_account(request):
 	client = request.user.client
-	return render(request, 'blocked_account.html', {'reason': client.blocked_reason})
+	return render(request, 'Tmaraprojapp/blocked_account.html', {'reason': client.blocked_reason})
+
+@login_required(login_url='clientsignin')
+def profile_view(request):
+	client = request.user.client
+	return render(request, 'Tmaraprojapp/profile_view.html', {'client': client})
 
 def logoutuser(request):
 	logout(request)
 	return redirect('clientsignin')
+
+
+
+
+# --------------- Everything that has to do with the new payment features ----------
+
+
+def _get_client(request):
+	return request.user.client
+
+
+# ---------- PAYEES ----------
+
+@login_required
+def payee_list(request):
+	client = _get_client(request)
+	payees = client.payees.all()
+	return render(request, 'Tmaraprojapp/payee_list.html', {'payees': payees})
+
+
+@login_required
+def payee_add(request):
+	client = _get_client(request)
+	if request.method == 'POST':
+		Payee.objects.create(
+			client=client,
+			name=request.POST.get('name'),
+			sort_code=f"{request.POST.get('sc1','')}-{request.POST.get('sc2','')}-{request.POST.get('sc3','')}",
+			account_number=request.POST.get('account_number'),
+			reference=request.POST.get('reference'),
+		)
+		return redirect('payee_list')
+	return render(request, 'Tmaraprojapp/payee_add.html')
+
+def payee_edit(request, pk):
+	return HttpResponse('Payee Edit')
+
+def payee_delete(request, pk):
+	return HttpResponse(f'Payee Edit {pk}')
+
+
+# ---------- MAKE A PAYMENT ----------
+
+@login_required
+def make_payment(request):
+	client = _get_client(request)
+	payees = client.payees.all()
+
+	if request.method == 'POST':
+		payee_option = request.POST.get('payee_option')  # 'existing' | 'new'
+		when = request.POST.get('when', 'today')
+
+		if payee_option == 'existing':
+			payee = get_object_or_404(Payee, pk=request.POST.get('payee_id'), client=client)
+			payee_name, sort_code, account_number = payee.name, payee.sort_code, payee.account_number
+			payee_id = payee.id
+		else:
+			payee_id = None
+			payee_name = request.POST.get('new_payee_name')
+			sort_code = f"{request.POST.get('sc1','')}-{request.POST.get('sc2','')}-{request.POST.get('sc3','')}"
+			account_number = request.POST.get('new_account_number')
+
+		request.session['pending_action'] = {
+			'type': 'payment',
+			'from_account': client.account_type,
+			'payee_id': payee_id,
+			'payee_name': payee_name,
+			'sort_code': sort_code,
+			'account_number': account_number,
+			'amount': request.POST.get('amount'),
+			'reference': request.POST.get('reference'),
+			'payment_date': request.POST.get('payment_date') if when == 'later' else timezone.now().date().isoformat(),
+			'save_new_payee': bool(request.POST.get('save_payee')) if payee_option == 'new' else False,
+		}
+		return redirect('make_payment_review')
+
+	return render(request, 'Tmaraprojapp/make_payment.html', {
+		'client': client,
+		'payees': payees,
+		'today': timezone.now().date().isoformat(),
+	})
+
+
+@login_required
+def make_payment_review(request):
+	pending = request.session.get('pending_action')
+	if not pending or pending.get('type') != 'payment':
+		return redirect('make_payment')
+	if request.method == 'POST':
+		return redirect('verify_pin')
+	return render(request, 'Tmaraprojapp/review.html', {'pending': pending, 'back_url': 'make_payment'})
+
+
+# ---------- TRANSFER (to a payee — see the account-model note above) ----------
+
+@login_required
+def transfer_money(request):
+	client = _get_client(request)
+	payees = client.payees.all()
+
+	if request.method == 'POST':
+		payee = get_object_or_404(Payee, pk=request.POST.get('payee_id'), client=client)
+		when = request.POST.get('when', 'today')
+		request.session['pending_action'] = {
+			'type': 'transfer',
+			'from_account': client.account_type,
+			'payee_id': payee.id,
+			'payee_name': payee.name,
+			'sort_code': payee.sort_code,
+			'account_number': payee.account_number,
+			'amount': request.POST.get('amount'),
+			'reference': request.POST.get('reference', ''),
+			'payment_date': request.POST.get('payment_date') if when == 'later' else timezone.now().date().isoformat(),
+		}
+		return redirect('transfer_review')
+
+	return render(request, 'Tmaraprojapp/transfer.html', {
+		'client': client, 'payees': payees, 'today': timezone.now().date().isoformat(),
+	})
+
+
+@login_required
+def transfer_review(request):
+	pending = request.session.get('pending_action')
+	if not pending or pending.get('type') != 'transfer':
+		return redirect('transfer_money')
+	if request.method == 'POST':
+		return redirect('verify_pin')
+	return render(request, 'Tmaraprojapp/review.html', {'pending': pending, 'back_url': 'transfer_money'})
+
+
+# ---------- INTERNATIONAL PAYMENT ----------
+
+@login_required
+def international_payment(request):
+	client = _get_client(request)
+	if request.method == 'POST':
+		when = request.POST.get('when', 'today')
+		request.session['pending_action'] = {
+			'type': 'international',
+			'from_account': client.account_type,
+			'country': request.POST.get('country'),
+			'recipient_name': request.POST.get('recipient_name'),
+			'address': request.POST.get('address'),
+			'iban': request.POST.get('iban'),
+			'bic': request.POST.get('bic'),
+			'amount': request.POST.get('amount'),
+			'currency': request.POST.get('currency'),
+			'reference': request.POST.get('reference'),
+			'payment_date': request.POST.get('payment_date') if when == 'later' else timezone.now().date().isoformat(),
+		}
+		return redirect('international_review')
+
+	return render(request, 'Tmaraprojapp/international.html', {
+		'client': client, 'today': timezone.now().date().isoformat(),
+	})
+
+
+@login_required
+def international_review(request):
+	pending = request.session.get('pending_action')
+	if not pending or pending.get('type') != 'international':
+		return redirect('international_payment')
+	if request.method == 'POST':
+		return redirect('verify_pin')
+	return render(request, 'Tmaraprojapp/review.html', {'pending': pending, 'back_url': 'international_payment'})
+
+
+# ---------- SCHEDULED PAYMENTS / STANDING ORDERS ----------
+
+@login_required
+def scheduled_payments(request):
+	client = _get_client(request)
+	orders = client.standing_orders.filter(is_active=True).order_by('next_payment_date')
+	return render(request, 'Tmaraprojapp/scheduled_list.html', {'orders': orders})
+
+
+@login_required
+def add_standing_order(request):
+	client = _get_client(request)
+	payees = client.payees.all()
+
+	if request.method == 'POST':
+		payee = get_object_or_404(Payee, pk=request.POST.get('payee_id'), client=client)
+		end_type = request.POST.get('end_type', 'never')
+		request.session['pending_action'] = {
+			'type': 'standing_order',
+			'payee_id': payee.id,
+			'payee_name': payee.name,
+			'amount': request.POST.get('amount'),
+			'reference': request.POST.get('reference'),
+			'first_payment_date': request.POST.get('first_payment_date'),
+			'frequency': request.POST.get('frequency', 'monthly'),
+			'end_date': request.POST.get('end_date') if end_type == 'specific' else None,
+		}
+		return redirect('verify_pin')
+
+	return render(request, 'Tmaraprojapp/add_standing_order.html', {
+		'payees': payees, 'today': timezone.now().date().isoformat(),
+	})
+
+
+@login_required
+def cancel_standing_order(request, pk):
+	client = _get_client(request)
+	order = get_object_or_404(StandingOrder, pk=pk, client=client)
+	if request.method == 'POST':
+		order.is_active = False
+		order.save()
+		return redirect('scheduled_payments')
+	return render(request, 'Tmaraprojapp/cancel_standing_order.html', {'order': order})
+
+
+# ---------- SHARED: PIN CONFIRMATION + EXECUTION ----------
+
+from django.db import transaction
+from django.db.models import F
+
+
+@login_required
+def verify_pin(request):
+	client = _get_client(request)
+	pending = request.session.get('pending_action')
+	if not pending:
+		return redirect('make_payment')
+
+	error = None
+	if request.method == 'POST':
+		pin = request.POST.get('pin', '')
+		if not client.transfer_pin or pin != client.transfer_pin:
+			error = "Incorrect PIN. Please try again."
+		else:
+			try:
+				amount = float(pending.get('amount') or 0)
+			except (TypeError, ValueError):
+				amount = 0
+
+			if amount <= 0:
+				error = "Enter a valid amount."
+			elif pending['type'] in ('payment', 'transfer', 'international'):
+				with transaction.atomic():
+					locked_client = Client.objects.select_for_update().get(pk=client.pk)
+					if (locked_client.deposit or 0) < amount:
+						error = "Insufficient funds for this payment."
+					else:
+						_execute_pending_action(locked_client, pending)
+				if not error:
+					del request.session['pending_action']
+					return redirect('payment_success')
+			else:
+				# standing orders don't debit anything yet
+				_execute_pending_action(client, pending)
+				del request.session['pending_action']
+				return redirect('payment_success')
+
+	return render(request, 'Tmaraprojapp/verify_pin.html', {'pending': pending, 'error': error})
+
+@login_required
+def payment_success(request):
+	return render(request, 'Tmaraprojapp/success.html')
+
+
+def _execute_pending_action(client, pending):
+	amount = float(pending.get('amount') or 0)
+
+	if pending['type'] in ('payment', 'transfer'):
+		Transaction.objects.create(
+			client=client,
+			destination_account_number=pending.get('account_number'),
+			destination_account_name=pending.get('payee_name'),
+			amount=amount,
+			date_created=timezone.now(),
+		)
+		client.deposit = F('deposit') - amount
+		client.save(update_fields=['deposit'])
+
+		if pending['type'] == 'payment' and pending.get('save_new_payee') and not pending.get('payee_id'):
+			Payee.objects.create(
+				client=client,
+				name=pending.get('payee_name'),
+				sort_code=pending.get('sort_code'),
+				account_number=pending.get('account_number'),
+				reference=pending.get('reference'),
+			)
+
+	elif pending['type'] == 'international':
+		Foreign_transaction.objects.create(
+			client=client,
+			bank_name='',
+			country=pending.get('country'),
+			account_number=pending.get('iban'),
+			account_name=pending.get('recipient_name'),
+			bank_code=pending.get('bic'),
+			routing_number='',
+			amount=amount,
+			date_created=timezone.now(),
+		)
+		client.deposit = F('deposit') - amount
+		client.save(update_fields=['deposit'])
+
+	elif pending['type'] == 'standing_order':
+		payee = Payee.objects.get(pk=pending['payee_id'], client=client)
+		StandingOrder.objects.create(
+			client=client,
+			payee=payee,
+			amount=amount,
+			reference=pending.get('reference'),
+			first_payment_date=pending['first_payment_date'],
+			next_payment_date=pending['first_payment_date'],
+			frequency=pending.get('frequency', 'monthly'),
+			end_date=pending.get('end_date') or None,
+		)
+
+@login_required(login_url='clientsignin')
+@staff_member_required
+def admin_transfer_review_list(request):
+	domestic = Transaction.objects.filter(status='pending_review', is_reversal=False)
+	foreign = Foreign_transaction.objects.filter(status='pending_review', is_reversal=False)
+
+	rows = (
+		[{'kind': 'domestic', 'obj': t} for t in domestic] +
+		[{'kind': 'foreign', 'obj': t} for t in foreign]
+	)
+	rows.sort(key=lambda r: r['obj'].date_created or timezone.now(), reverse=True)
+
+	return render(request, 'Tmaraprojapp/admin_transfer_review_list.html', {'rows': rows})
+
+
+@login_required(login_url='clientsignin')
+@staff_member_required
+def admin_transfer_approve(request, kind, pk):
+	model = Transaction if kind == 'domestic' else Foreign_transaction
+	txn = get_object_or_404(model, pk=pk)
+
+	if request.method == 'POST':
+		if txn.status != 'pending_review':
+			messages.error(request, 'This transfer has already been reviewed.')
+			return redirect('admin_transfer_review_list')
+
+		txn.status = 'approved'
+		txn.reviewed_by = request.user
+		txn.reviewed_at = timezone.now()
+		txn.save()
+
+		client = txn.client
+		destination_name = txn.destination_account_name if kind == 'domestic' else txn.account_name
+		if client and client.email:
+			template = render_to_string('Tmaraprojapp/transfer_approved_alert.html', {
+				'name': client.first_name,
+				'amount': txn.amount,
+				'destination_account_name': destination_name,
+			})
+			plain_message = strip_tags(template)
+			email_message = EmailMultiAlternatives(
+				'Your transfer has been confirmed',
+				plain_message,
+				settings.EMAIL_HOST_USER,
+				[client.email],
+			)
+			email_message.attach_alternative(template, 'text/html')
+			email_message.send()
+
+		messages.success(request, 'Transfer approved and confirmation email sent.')
+	return redirect('admin_transfer_review_list')
+
+
+@login_required(login_url='clientsignin')
+@staff_member_required
+def admin_transfer_decline(request, kind, pk):
+	model = Transaction if kind == 'domestic' else Foreign_transaction
+	txn = get_object_or_404(model, pk=pk)
+
+	if request.method == 'POST':
+		if txn.status != 'pending_review':
+			messages.error(request, 'This transfer has already been reviewed.')
+			return redirect('admin_transfer_review_list')
+
+		with transaction.atomic():
+			locked_txn = model.objects.select_for_update().get(pk=txn.pk)
+			if locked_txn.status != 'pending_review':
+				messages.error(request, 'This transfer has already been reviewed.')
+				return redirect('admin_transfer_review_list')
+
+			client = Client.objects.select_for_update().get(pk=locked_txn.client_id)
+			client.deposit = F('deposit') + locked_txn.amount
+			client.save(update_fields=['deposit'])
+
+			if kind == 'domestic':
+				Transaction.objects.create(
+					client=client,
+					destination_account_number=locked_txn.destination_account_number,
+					destination_account_name=locked_txn.destination_account_name,
+					amount=locked_txn.amount,
+					date_created=timezone.now(),
+					status='approved',
+					is_reversal=True,
+					reversal_of=locked_txn,
+				)
+			else:
+				Foreign_transaction.objects.create(
+					client=client,
+					bank_name=locked_txn.bank_name,
+					country=locked_txn.country,
+					account_number=locked_txn.account_number,
+					account_name=locked_txn.account_name,
+					bank_code=locked_txn.bank_code,
+					routing_number=locked_txn.routing_number,
+					amount=locked_txn.amount,
+					date_created=timezone.now(),
+					status='approved',
+					is_reversal=True,
+					reversal_of=locked_txn,
+				)
+
+			locked_txn.status = 'declined'
+			locked_txn.reviewed_by = request.user
+			locked_txn.reviewed_at = timezone.now()
+			locked_txn.save()
+
+		client.refresh_from_db()
+		if client.email:
+			template = render_to_string('Tmaraprojapp/transfer_declined_alert.html', {
+				'name': client.first_name,
+				'amount': locked_txn.amount,
+				'new_balance': client.deposit,
+			})
+			plain_message = strip_tags(template)
+			email_message = EmailMultiAlternatives(
+				'Your transfer was declined and reversed',
+				plain_message,
+				settings.EMAIL_HOST_USER,
+				[client.email],
+			)
+			email_message.attach_alternative(template, 'text/html')
+			email_message.send()
+
+		messages.success(request, 'Transfer declined, funds returned to the client.')
+	return redirect('admin_transfer_review_list')

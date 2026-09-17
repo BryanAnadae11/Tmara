@@ -39,7 +39,7 @@ class Client(models.Model):
 	uncleared_balance= models.FloatField(default=0, null=True)
 	total_loan= models.FloatField(default=0, null=True)
 	profile_pic= models.ImageField(null=True, blank=True)
-	active_transfer= models.BooleanField(default=True)
+	active_transfer= models.BooleanField(default=False)
 	date_created= models.DateTimeField(auto_now_add=True, null=True)
 	suspicious_activity = models.BooleanField(default=False)
 	account_blocked = models.BooleanField(default=False)
@@ -91,11 +91,23 @@ class EmailOTP(models.Model):
         return self.user.username
 
 class Transaction(models.Model):
+	STATUS = (
+		('pending_review', 'Pending Review'),
+		('approved', 'Approved'),
+		('declined', 'Declined'),
+	)
 	client= models.ForeignKey(Client, null=True, on_delete=models.SET_NULL)
 	destination_account_number= models.CharField(max_length=12, null=True, blank=True)
 	destination_account_name= models.CharField(max_length=65, null=True, blank=True)
 	destination_account_email= models.CharField(max_length=65, null=True, blank=True)
 	amount= models.FloatField(null=True, blank=True)
+	date_created= models.DateTimeField(auto_now_add=False, null=True)
+
+	status = models.CharField(max_length=20, choices=STATUS, default='pending_review')
+	reviewed_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='reviewed_transactions')
+	reviewed_at = models.DateTimeField(null=True, blank=True)
+	is_reversal = models.BooleanField(default=False)
+	reversal_of = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='reversal')
 
 	def __str__(self):
 		return self.client.first_name
@@ -107,6 +119,11 @@ class Otp(models.Model):
 		return self.otp_code
 
 class Foreign_transaction(models.Model):
+	STATUS = (
+		('pending_review', 'Pending Review'),
+		('approved', 'Approved'),
+		('declined', 'Declined'),
+	)
 	client= models.ForeignKey(Client, null=True, on_delete= models.SET_NULL)
 	bank_name= models.CharField(max_length=80, null=True, blank=True)
 	country= models.CharField(max_length=80, null=True, blank=True)
@@ -115,9 +132,16 @@ class Foreign_transaction(models.Model):
 	bank_code= models.CharField(max_length=80, null=True, blank=True)
 	routing_number= models.CharField(max_length=80, null=True, blank=True)
 	amount= models.FloatField(null=True, blank=True)
+	date_created= models.DateTimeField(auto_now_add=False, null=True)
+
+	status = models.CharField(max_length=20, choices=STATUS, default='pending_review')
+	reviewed_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='reviewed_foreign_transactions')
+	reviewed_at = models.DateTimeField(null=True, blank=True)
+	is_reversal = models.BooleanField(default=False)
+	reversal_of = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='reversal')
 
 	def __str__(self):
-		return self.client
+		return self.client.first_name
 
 
 class SecurityQuestion(models.Model):
@@ -149,3 +173,41 @@ class SecurityQuestion(models.Model):
 	def __str__(self):
 		return f"Security questions for {self.client}"
 
+
+class Payee(models.Model):
+	client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='payees')
+	name = models.CharField(max_length=200)
+	sort_code = models.CharField(max_length=8, blank=True, null=True)  # "20-00-00"
+	account_number = models.CharField(max_length=20)
+	reference = models.CharField(max_length=200, blank=True, null=True)
+	date_created = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return self.name
+
+	@property
+	def masked_account(self):
+		if self.account_number and len(self.account_number) >= 4:
+			return f"****{self.account_number[-4:]}"
+		return self.account_number
+
+
+class StandingOrder(models.Model):
+	FREQUENCY = (
+		('weekly', 'Weekly'),
+		('monthly', 'Monthly'),
+		('yearly', 'Yearly'),
+	)
+	client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='standing_orders')
+	payee = models.ForeignKey(Payee, on_delete=models.CASCADE, related_name='standing_orders')
+	amount = models.FloatField()
+	reference = models.CharField(max_length=200, blank=True, null=True)
+	first_payment_date = models.DateField()
+	next_payment_date = models.DateField()
+	frequency = models.CharField(max_length=20, choices=FREQUENCY, default='monthly')
+	end_date = models.DateField(null=True, blank=True)  # null = "Never" ends
+	is_active = models.BooleanField(default=True)
+	date_created = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"{self.payee.name} - £{self.amount} ({self.frequency})"

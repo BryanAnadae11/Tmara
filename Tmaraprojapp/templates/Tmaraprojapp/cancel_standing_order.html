@@ -1,0 +1,22 @@
+{% extends "Tmaraprojapp/base.html" %}
+{% block title %}Cancel Payment — My Bank{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">Cancel this payment?</h1>
+</div>
+
+<div class="content-card">
+  <div class="summary-list">
+    <p>{{ order.payee.name }} — £{{ order.amount }} ({{ order.frequency }})</p>
+    <p>Next payment: {{ order.next_payment_date }}</p>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="action-row">
+      <a class="back-link" href="{% url 'scheduled_payments' %}">← Back</a>
+      <button type="submit">Confirm cancellation</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

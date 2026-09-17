@@ -1,0 +1,79 @@
+{% extends "Tmaraprojapp/base.html" %}
+{% block title %}My Profile — My Bank{% endblock %}
+{% block nav_settings %}nav-item--active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">My Profile</h1>
+</div>
+
+<div class="content-card">
+  {% if client.profile_picUrl %}
+    <img src="{{ client.profile_picUrl }}" alt="Profile picture" class="profile-avatar">
+  {% endif %}
+
+  <div class="detail-list">
+    <div class="detail-row">
+      <span class="detail-row__label">First name</span>
+      <span class="detail-row__value">{{ client.first_name }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Last name</span>
+      <span class="detail-row__value">{{ client.last_name }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Email</span>
+      <span class="detail-row__value">{{ client.email }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Phone</span>
+      <span class="detail-row__value">{{ client.phone }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Home address</span>
+      <span class="detail-row__value">{{ client.home_address }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="content-card" style="margin-top:20px;">
+  <div class="detail-list">
+    <div class="detail-row">
+      <span class="detail-row__label">Account number</span>
+      <span class="detail-row__value">{{ client.account_number }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Account type</span>
+      <span class="detail-row__value">{{ client.get_account_type_display }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Account currency</span>
+      <span class="detail-row__value">{{ client.get_account_currency_display }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Account status</span>
+      <span class="detail-row__value">{% if client.account_status %}Active{% else %}Inactive{% endif %}</span>
+    </div>
+  </div>
+</div>
+
+<div class="content-card" style="margin-top:20px;">
+  <div class="detail-list">
+    <div class="detail-row">
+      <span class="detail-row__label">Balance</span>
+      <span class="detail-row__value">{{ client.deposit|floatformat:2 }} {{ client.account_currency }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Uncleared balance</span>
+      <span class="detail-row__value">{{ client.uncleared_balance|floatformat:2 }} {{ client.account_currency }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Total loan</span>
+      <span class="detail-row__value">{{ client.total_loan|floatformat:2 }} {{ client.account_currency }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-row__label">Member since</span>
+      <span class="detail-row__value">{{ client.date_created }}</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "Tmaraprojapp/base.html" %}
+{% block title %}Scheduled Payments — My Bank{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">Upcoming</h1>
+</div>
+
+<ul class="item-list">
+{% for o in orders %}
+  <li>
+    <span>{{ o.next_payment_date }} — {{ o.payee.name }} — £{{ o.amount }} ({{ o.frequency }})</span>
+    <form method="post" action="{% url 'cancel_standing_order' o.id %}">
+      {% csrf_token %}<button type="submit" class="btn btn--secondary">Cancel</button>
+    </form>
+  </li>
+{% empty %}
+  <li>No scheduled payments yet.</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'add_standing_order' %}" class="btn btn--primary" style="margin-top:16px;">Set up a payment</a>
+{% endblock %}

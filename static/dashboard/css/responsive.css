@@ -1,0 +1,340 @@
+/* ============================================
+   BCA FINTECH DASHBOARD - RESPONSIVE
+   Mobile-first with progressive enhancement
+   ============================================ */
+
+/* ── 1920px+ ── */
+@media (min-width: 1920px) {
+  .app {
+    max-width: 1600px;
+    margin: var(--space-6) auto;
+    min-height: calc(100vh - var(--space-12));
+  }
+
+  .main {
+    padding: var(--space-10);
+  }
+
+  .right-panel {
+    padding: var(--space-10);
+  }
+
+  .sidebar {
+    padding: var(--space-10) var(--space-6);
+  }
+}
+
+/* ── 1440px ── */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .app {
+    max-width: var(--container-max);
+    margin: var(--space-4) auto;
+    min-height: calc(100vh - var(--space-8));
+  }
+}
+
+/* ── 1366px ── */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  :root {
+    --sidebar-width: 200px;
+    --right-panel-width: 300px;
+  }
+
+  .main {
+    padding: var(--space-6);
+  }
+
+  .right-panel {
+    padding: var(--space-6);
+  }
+
+  .sidebar {
+    padding: var(--space-6) var(--space-4);
+  }
+}
+
+/* ── 1024px (Tablet Landscape) ── */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  :root {
+    --sidebar-width: 200px;
+    --right-panel-width: 280px;
+  }
+
+  .app {
+    grid-template-columns: var(--sidebar-width) 1fr;
+  }
+
+  .right-panel {
+    display: none;
+  }
+
+  .main {
+    padding: var(--space-6);
+  }
+
+  .sidebar {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .credit-card {
+    max-width: 160px;
+  }
+}
+
+/* ── 768px (Tablet Portrait) ── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .app {
+    grid-template-columns: var(--sidebar-collapsed) 1fr;
+    border-radius: 0;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .sidebar {
+    padding: var(--space-6) var(--space-2);
+    align-items: center;
+  }
+
+  .sidebar__logo {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-8);
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: var(--space-3);
+  }
+
+  .nav-item__text,
+  .nav-item__badge {
+    display: none;
+  }
+
+  .nav-item__icon {
+    margin: 0;
+  }
+
+  .nav-item__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sidebar__footer .nav-item__text {
+    display: none;
+  }
+
+  .right-panel {
+    display: none;
+  }
+
+  .main {
+    padding: var(--space-6);
+  }
+
+  .section-header {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}
+
+/* ── 480px (Mobile Landscape) ── */
+@media (min-width: 480px) and (max-width: 767px) {
+  .app {
+    grid-template-columns: 1fr;
+    border-radius: 0;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .mobile-header {
+    display: block;
+  }
+
+  .right-panel {
+    display: none;
+  }
+
+  .main {
+    padding: var(--space-5);
+    max-height: none;
+  }
+
+  .section-header {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .transaction-card {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .transaction-card__avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .statistics-section__chart-wrapper {
+    padding: var(--space-4);
+  }
+}
+
+/* ── 390px (Mobile Portrait) ── */
+@media (max-width: 479px) {
+  .app {
+    grid-template-columns: 1fr;
+    border-radius: 0;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .mobile-header {
+    display: block;
+  }
+
+  .right-panel {
+    display: none;
+  }
+
+  .main {
+    padding: var(--space-4);
+    max-height: none;
+    gap: var(--space-6);
+  }
+
+  .main-header {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .main-header__group:last-child {
+    text-align: left;
+  }
+
+  .section-header {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .section-header__title {
+    font-size: var(--text-lg);
+  }
+
+  .transaction-card {
+    padding: var(--space-3);
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .transaction-card__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+  }
+
+  .transaction-card__info {
+    min-width: calc(100% - 52px);
+  }
+
+  .transaction-card__card-num {
+    order: 3;
+    width: 100%;
+    padding-left: 48px;
+    margin-top: -4px;
+  }
+
+  .transaction-card__amount {
+    order: 2;
+  }
+
+  .statistics-section__chart-wrapper {
+    padding: var(--space-4);
+  }
+
+  .statistics-section__chart {
+    height: 150px;
+  }
+
+  .statistics-section__x-axis {
+    padding: 0 var(--space-3);
+  }
+
+  .tab-group {
+    flex-wrap: wrap;
+  }
+}
+
+/* ── Print Styles ── */
+@media print {
+  .sidebar,
+  .right-panel,
+  .mobile-header,
+  .mobile-nav,
+  .mobile-nav-overlay {
+    display: none !important;
+  }
+
+  .app {
+    grid-template-columns: 1fr;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .main {
+    max-height: none;
+    padding: 0;
+  }
+
+  .transaction-card,
+  .credit-card,
+  .info-card,
+  .limit-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* ── High Contrast Mode ── */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --text-muted: #555555;
+    --border-light: 1px solid #000000;
+    --border-medium: 2px solid #000000;
+  }
+
+  .transaction-card,
+  .info-card,
+  .limit-card {
+    border: 2px solid #000000;
+  }
+}
+
+/* ── Touch Device Optimizations ── */
+@media (hover: none) and (pointer: coarse) {
+  .transaction-card:hover {
+    transform: none;
+  }
+
+  .credit-card:hover {
+    transform: none;
+  }
+
+  .limit-card:hover {
+    transform: none;
+  }
+
+  .btn:hover {
+    transform: none;
+  }
+}

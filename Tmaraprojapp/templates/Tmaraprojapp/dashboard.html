@@ -1,0 +1,352 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="">
+  <meta name="theme-color" content="#f0f0f0">
+
+  <title>Online Banking</title>
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="{% static 'dashboard/css/variables.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/css/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/css/animations.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/css/responsive.css' %}">
+
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'img/favicon.ico' %}">
+</head>
+<body>
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <div class="mobile-header__inner">
+      <div class="hamburger" aria-label="Open menu" role="button" tabindex="0">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </div>
+      <a href="{% url 'home' %}" class="mobile-header__logo">
+        <img src="{% static 'tmara_logo.png' %}" width="90" height="20" alt="Logo">
+      </a>
+      <div class="mobile-header__actions">
+        <a class="btn btn--ghost" href="{% url 'contact' %}" aria-label="Messages">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </a>
+        <button class="btn btn--ghost" aria-label="Notifications" style="position: relative;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="panel-header__action-badge"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="mobile-nav-overlay" aria-hidden="true"></div>
+
+  <!-- Mobile Navigation Drawer -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <div class="mobile-nav__header">
+      <img src="{% static 'tmara_logo.png' %}" width="90" height="20" alt="Logo">
+      <button class="mobile-nav__close" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="mobile-nav__menu">
+      <a href="{% url 'dashboard' %}" class="nav-item nav-item--active">
+        <span class="nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </span>
+        <span class="nav-item__text">Overview</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+            <line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+        </span>
+        <span class="nav-item__text">Cards</span>
+      </a>
+      <a href="{% url 'fundtransfer' %}" class="nav-item">
+        <span class="nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="17 1 21 5 17 9"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <polyline points="7 23 3 19 7 15"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+        </span>
+        <span class="nav-item__text">Transactions</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </span>
+        <span class="nav-item__text">Statistics</span>
+      </a>
+      <a href="{% url 'account_settings' %}" class="nav-item">
+        <span class="nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </span>
+        <span class="nav-item__text">Account</span>
+      </a>
+      <a href="{% url 'account_settings' %}" class="nav-item">
+        <span class="nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </span>
+        <span class="nav-item__text">Settings</span>
+      </a>
+      <a href="{% url 'contact' %}" class="nav-item">
+        <span class="nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+        </span>
+        <span class="nav-item__text">Support</span>
+      </a>
+    </div>
+    <div class="mobile-nav__footer">
+      <a href="{% url 'logout' %}" class="nav-item">
+        <span class="nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </span>
+        <span class="nav-item__text">Log out</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main App -->
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar__logo">
+        <a href="{% url 'home' %}">
+          <img src="{% static 'tmara_logo.png' %}" width="110" height="24" alt="Logo">
+        </a>
+      </div>
+
+      <nav class="sidebar__nav">
+        <a href="{% url 'dashboard' %}" class="nav-item nav-item--active" aria-current="page">
+          <span class="nav-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </span>
+          <span class="nav-item__text">Overview</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+              <line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+          </span>
+          <span class="nav-item__text">Cards</span>
+        </a>
+
+        <a href="{% url 'fundtransfer' %}" class="nav-item">
+          <span class="nav-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="17 1 21 5 17 9"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <polyline points="7 23 3 19 7 15"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+          </span>
+          <span class="nav-item__text">Transactions</span>
+        </a>
+
+        <a href="{% url 'profile_view' %}" class="nav-item">
+          <span class="nav-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </span>
+          <span class="nav-item__text">Profile</span>
+        </a>
+
+        <a href="{% url 'account_settings' %}" class="nav-item">
+          <span class="nav-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </span>
+          <span class="nav-item__text">Account</span>
+        </a>
+
+        <a href="{% url 'account_settings' %}" class="nav-item">
+          <span class="nav-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </span>
+          <span class="nav-item__text">Settings</span>
+        </a>
+
+        <a href="{% url 'contact' %}" class="nav-item">
+          <span class="nav-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+          </span>
+          <span class="nav-item__text">Support</span>
+        </a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <a href="{% url 'logout' %}" class="nav-item">
+          <span class="nav-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </span>
+          <span class="nav-item__text">Log out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Header -->
+      <header class="main-header stagger-1">
+        <div class="main-header__group">
+          <span class="main-header__label">Account Number</span>
+          <span class="main-header__value">{{ clientAccountNumber }}</span>
+        </div>
+        <div class="main-header__group">
+          <span class="main-header__label">Currency</span>
+          <div class="main-header__currency">
+            <span>{{ clientAccountCurrency }}</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Latest Transactions -->
+      <section class="transactions-section stagger-2" aria-labelledby="transactions-title">
+        <div class="section-header">
+          <div>
+            <h2 id="transactions-title" class="section-header__title">Latest Transactions</h2>
+          </div>
+          <a class="btn btn--outline btn--sm ripple" href="{% url 'fundtransfer' %}">Show All</a>
+        </div>
+
+        <div class="transactions-section__list">
+          {% for transaction in recentTransactions %}
+          <div class="transaction-card ripple" role="button" tabindex="0">
+            <div class="transaction-card__avatar transaction-card__avatar--icon" aria-hidden="true"></div>
+            <div class="transaction-card__info">
+              <div class="transaction-card__name">{{ transaction.description }}</div>
+              <div class="transaction-card__category">{{ transaction.category }}
+                <span data-status="{{ transaction.status_code }}">— {{ transaction.status }}</span></div>
+            </div>
+            <span class="transaction-card__amount {% if transaction.amount < 0 %}transaction-card__amount--negative{% else %}transaction-card__amount--positive{% endif %}">
+              {{ transaction.amount|floatformat:2 }} {{ clientAccountCurrency }}
+            </span>
+          </div>
+          {% empty %}
+          <p>No recent transactions.</p>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+
+    <!-- Right Panel -->
+    <aside class="right-panel">
+      <!-- User Header -->
+      <div class="panel-header stagger-1">
+        <div class="panel-header__user">
+          <div class="user-avatar" aria-label="{{ request.user.username }} profile">
+            {% if request.user.client.profile_picUrl %}
+              <img src="{{ request.user.client.profile_picUrl }}" width="44" height="44" alt="">
+            {% endif %}
+          </div>
+          <div class="panel-header__greeting">
+            <span class="panel-header__greeting-label">Hello,</span>
+            <span class="panel-header__greeting-name">{{ request.user.username }}</span>
+          </div>
+        </div>
+        <div class="panel-header__actions">
+          <a class="panel-header__action" href="{% url 'contact' %}" aria-label="Messages" data-tooltip="Messages">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Account Info -->
+      <section class="info-card stagger-4" aria-labelledby="cardinfo-title">
+        <div class="info-card__header">
+          <h4 id="cardinfo-title" class="info-card__title">Account Info</h4>
+          <a class="btn btn--outline btn--sm ripple" href="{% url 'account_settings' %}">Details</a>
+        </div>
+        <div class="info-card__row">
+          <span class="info-card__label">Account Number</span>
+          <span class="info-card__value">{{ clientAccountNumber }}</span>
+        </div>
+        <div class="info-card__row">
+          <span class="info-card__label">Account Type</span>
+          <span class="info-card__value">{{ clientAccountType }}</span>
+        </div>
+        <div class="info-card__row">
+          <span class="info-card__label">Currency</span>
+          <span class="info-card__value">{{ clientAccountCurrency }}</span>
+        </div>
+        <div class="info-card__row">
+          <span class="info-card__label">Balance</span>
+          <span class="info-card__value info-card__value--highlight">
+            {{ clientAccountCurrency }} {{ clientBalance|floatformat:2 }}
+          </span>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <!-- Scripts -->
+  <script src="{% static 'dashboard/js/navigation.js' %}"></script>
+  <script src="{% static 'dashboard/js/interactions.js' %}"></script>
+  <script src="{% static 'dashboard/js/app.js' %}"></script>
+</body>
+</html>

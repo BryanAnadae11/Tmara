@@ -1,0 +1,46 @@
+{% extends "Tmaraprojapp/base.html" %}
+{% block title %}Transfers Pending Review — My Bank{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">Transfers pending review</h1>
+</div>
+
+<div class="data-table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Date</th><th>Type</th><th>Client</th><th>To</th><th>Account</th><th>Amount</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row.obj.date_created }}</td>
+        <td>{{ row.kind }}</td>
+        <td>{{ row.obj.client.first_name }} {{ row.obj.client.last_name }}</td>
+        {% if row.kind == 'domestic' %}
+          <td>{{ row.obj.destination_account_name }}</td>
+          <td>{{ row.obj.destination_account_number }}</td>
+        {% else %}
+          <td>{{ row.obj.account_name }} — {{ row.obj.bank_name }} ({{ row.obj.country }})</td>
+          <td>{{ row.obj.account_number }}</td>
+        {% endif %}
+        <td>{{ row.obj.amount|floatformat:2 }}</td>
+        <td>
+          <div class="row-actions">
+            <form method="post" action="{% url 'admin_transfer_approve' row.kind row.obj.id %}">
+              {% csrf_token %}<button type="submit" class="btn btn--approve btn--sm">Approve</button>
+            </form>
+            <form method="post" action="{% url 'admin_transfer_decline' row.kind row.obj.id %}">
+              {% csrf_token %}<button type="submit" class="btn btn--decline btn--sm">Decline</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="data-table-empty">No transfers pending review.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

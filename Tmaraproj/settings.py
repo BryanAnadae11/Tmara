@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-w0+tabo$4%0yv%=f+=@h8&3)*8flyh#5g5w+1d43a6my8a5z0e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -135,11 +135,11 @@ EMAIL_BACKEND= 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.hostinger.com'
 EMAIL_PORT=465
 EMAIL_USE_SSL=True
-EMAIL_HOST_USER='support@valonglobal.com'
+EMAIL_HOST_USER='support@valonglobal.capital'
 EMAIL_HOST_PASSWORD='Derico12345@'
 
 
-DEFAULT_FROM_EMAIL= 'support@valonglobal.com'
+DEFAULT_FROM_EMAIL= 'support@valonglobal.capital'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

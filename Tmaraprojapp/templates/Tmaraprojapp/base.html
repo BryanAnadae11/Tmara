@@ -246,7 +246,7 @@
 <div class="app">
   <aside class="sidebar" role="navigation" aria-label="Main navigation">
     <a href="{% url 'home' %}" class="bca-logo">
-      <img src="{% static 'tmara_logo.png' %}" width="100" alt="Logo">
+      <span style="font-weight:800;letter-spacing:0.1em;">VGB</span>
     </a>
     <nav style="display:flex;flex-direction:column;gap:4px;">
       <a href="{% url 'dashboard' %}" class="nav-item {% block nav_dashboard %}{% endblock %}">
@@ -285,7 +285,7 @@
         <span class="nav-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
         <span>Payees</span>
       </a>
-      <a href="{% url 'profile_view' %}" class="nav-item {% block nav_payees %}{% endblock %}">
+      <a href="{% url 'profile_view' %}" class="nav-item {% block nav_profile %}{% endblock %}">
         <span class="nav-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
         <span>Profile</span>
       </a>

@@ -37,7 +37,7 @@
         <span class="hamburger__line"></span>
       </div>
       <a href="{% url 'home' %}" class="mobile-header__logo">
-        <img src="{% static 'tmara_logo.png' %}" width="90" height="20" alt="Logo">
+        <span style="font-weight:800;letter-spacing:0.1em;">VGB</span>
       </a>
       <div class="mobile-header__actions">
         <a class="btn btn--ghost" href="{% url 'contact' %}" aria-label="Messages">
@@ -63,7 +63,7 @@
   <!-- Mobile Navigation Drawer -->
   <nav class="mobile-nav" aria-label="Mobile navigation">
     <div class="mobile-nav__header">
-      <img src="{% static 'tmara_logo.png' %}" width="90" height="20" alt="Logo">
+      <span style="font-weight:800;letter-spacing:0.1em;">VGB</span>
       <button class="mobile-nav__close" aria-label="Close menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"/>
@@ -81,7 +81,7 @@
         </span>
         <span class="nav-item__text">Overview</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="{% url 'card' %}" class="nav-item">
         <span class="nav-item__icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
@@ -109,7 +109,7 @@
         </span>
         <span class="nav-item__text">Statistics</span>
       </a>
-      <a href="{% url 'account_settings' %}" class="nav-item">
+      <a href="{% url 'profile_view' %}" class="nav-item">
         <span class="nav-item__icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -156,7 +156,7 @@
     <aside class="sidebar" role="navigation" aria-label="Main navigation">
       <div class="sidebar__logo">
         <a href="{% url 'home' %}">
-          <img src="{% static 'tmara_logo.png' %}" width="110" height="24" alt="Logo">
+          <span style="font-weight:800;letter-spacing:0.1em;">VGB</span>
         </a>
       </div>
 
@@ -171,7 +171,7 @@
           <span class="nav-item__text">Overview</span>
         </a>
 
-        <a href="#" class="nav-item">
+        <a href="{% url 'card' %}" class="nav-item">
           <span class="nav-item__icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
@@ -194,15 +194,6 @@
         </a>
 
         <a href="{% url 'profile_view' %}" class="nav-item">
-          <span class="nav-item__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-            </svg>
-          </span>
-          <span class="nav-item__text">Profile</span>
-        </a>
-
-        <a href="{% url 'account_settings' %}" class="nav-item">
           <span class="nav-item__icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>

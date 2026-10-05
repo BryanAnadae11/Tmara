@@ -25,7 +25,7 @@ class ClientUserForm(ModelForm):
 	class Meta:
 		model= Client
 		fields= '__all__'
-		exclude= ['user', 'account_number', 'account_type', 'account_status', 'deposit', 'uncleared_balance', 'total_loan', 'date_created', 'account_currency', 'active_transfer']
+		exclude= ['user', 'account_number', 'account_type', 'account_status', 'deposit', 'uncleared_balance', 'total_loan', 'date_created', 'account_currency', 'active_transfer', 'suspicious_activity', 'account_blocked', 'blocked_reason']
 
 class OTPForm(forms.Form):
     otp = forms.CharField(label='Enter OTP', max_length=6)

@@ -521,7 +521,7 @@ def signup(request):
 		second_email_message.send()
 
 		try:
-			send_mail(username, "A client with username: {} has just signed up on your site with email: {}".format(username, email),settings.EMAIL_HOST_USER, ['support@valonglobal.com'])
+			send_mail(username, "A client with username: {} has just signed up on your site with email: {}".format(username, email),settings.EMAIL_HOST_USER, ['support@valonglobal.capital'])
 		except BadHeaderError:
 			return HttpResponse("Your account has been created but you can't login at this time. please, try to login later")
 		user= authenticate(username=username, password=password)
@@ -761,7 +761,8 @@ def cancel_standing_order(request, pk):
 from django.db import transaction
 from django.db.models import F
 
-
+''' 
+-------- Verify Pin and initiate transfer with just transfer pin only --------
 @login_required
 def verify_pin(request):
 	client = _get_client(request)
@@ -799,6 +800,93 @@ def verify_pin(request):
 				return redirect('payment_success')
 
 	return render(request, 'Tmaraprojapp/verify_pin.html', {'pending': pending, 'error': error})
+'''
+
+# -------- Verify Pin and initiate transfer with transfer pin and email otp --------
+@login_required
+def verify_pin(request):
+	client = _get_client(request)
+	pending = request.session.get('pending_action')
+	if not pending:
+		return redirect('make_payment')
+
+	error = None
+	if request.method == 'POST':
+		pin = request.POST.get('pin', '')
+		if not client.transfer_pin or pin != client.transfer_pin:
+			error = "Incorrect PIN. Please try again."
+		else:
+			otp = str(random.randint(100000, 999999))
+			PaymentOTP.objects.update_or_create(
+				user=request.user,
+				defaults={'otp_code': otp, 'created_at': timezone.now()},
+			)
+
+			template = render_to_string('Tmaraprojapp/payment_otp_email.html', {
+				'name': client.first_name, 'otp': otp,
+			})
+			plain_message = strip_tags(template)
+			email_message = EmailMultiAlternatives(
+				'Your payment verification code',
+				plain_message,
+				settings.EMAIL_HOST_USER,
+				[client.email],
+			)
+			email_message.attach_alternative(template, 'text/html')
+			email_message.send()
+
+			request.session['pin_verified'] = True
+			return redirect('verify_payment_otp')
+
+	return render(request, 'Tmaraprojapp/verify_pin.html', {'pending': pending, 'error': error})
+
+@login_required
+def verify_payment_otp(request):
+	client = _get_client(request)
+	pending = request.session.get('pending_action')
+	if not pending or not request.session.get('pin_verified'):
+		return redirect('make_payment')
+
+	error = None
+	if request.method == 'POST':
+		entered_otp = request.POST.get('otp', '')
+		try:
+			otp_obj = PaymentOTP.objects.get(user=request.user)
+		except PaymentOTP.DoesNotExist:
+			otp_obj = None
+
+		if not otp_obj or str(otp_obj.otp_code) != str(entered_otp) or otp_obj.is_expired():
+			error = "Invalid or expired code. Please try again."
+		else:
+			try:
+				amount = float(pending.get('amount') or 0)
+			except (TypeError, ValueError):
+				amount = 0
+
+			if amount <= 0:
+				error = "Enter a valid amount."
+			elif pending['type'] in ('payment', 'transfer', 'international'):
+				with transaction.atomic():
+					locked_client = Client.objects.select_for_update().get(pk=client.pk)
+					if (locked_client.deposit or 0) < amount:
+						error = "Insufficient funds for this payment."
+					else:
+						_execute_pending_action(locked_client, pending)
+				if not error:
+					otp_obj.delete()
+					del request.session['pending_action']
+					del request.session['pin_verified']
+					return redirect('payment_success')
+			else:
+				_execute_pending_action(client, pending)
+				otp_obj.delete()
+				del request.session['pending_action']
+				del request.session['pin_verified']
+				return redirect('payment_success')
+
+	return render(request, 'Tmaraprojapp/verify_payment_otp.html', {'pending': pending, 'error': error})
+
+# -------- Verify Pin and initiate transfer with transfer pin and email otp ends here --------
 
 @login_required
 def payment_success(request):

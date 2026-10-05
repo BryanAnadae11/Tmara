@@ -38,7 +38,7 @@ class Client(models.Model):
 	deposit= models.FloatField(default=0, null=True, blank=True)
 	uncleared_balance= models.FloatField(default=0, null=True)
 	total_loan= models.FloatField(default=0, null=True)
-	profile_pic= models.ImageField(null=True, blank=True)
+	profile_pic= models.ImageField(null=True, blank=True, upload_to='profile_pics/', default='profile_pics/default_img.jpg')
 	active_transfer= models.BooleanField(default=False)
 	date_created= models.DateTimeField(auto_now_add=True, null=True)
 	suspicious_activity = models.BooleanField(default=False)
@@ -211,3 +211,18 @@ class StandingOrder(models.Model):
 
 	def __str__(self):
 		return f"{self.payee.name} - £{self.amount} ({self.frequency})"
+	
+
+class PaymentOTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    otp_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        created = self.created_at
+        if timezone.is_naive(created):
+            created = timezone.make_aware(created, timezone.get_current_timezone())
+        return timezone.now() > created + datetime.timedelta(minutes=5)
+
+    def __str__(self):
+        return self.user.username

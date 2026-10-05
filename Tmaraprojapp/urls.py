@@ -72,6 +72,7 @@ urlpatterns += [
 
 	# ---------- SHARED: PIN CONFIRMATION + EXECUTION ----------
 	path('payments/verify-pin/', views.verify_pin, name='verify_pin'),
+    path('payments/verify-otp/', views.verify_payment_otp, name='verify_payment_otp'),
 	path('payments/success/', views.payment_success, name='payment_success'),
 
 	# ---------- ADMIN: TRANSFER REVIEW (domestic + international) ----------

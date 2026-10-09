@@ -1,0 +1,166 @@
+{% extends 'Tmaraprojapp/base.html' %}
+{% block title %}Set Up Security Questions{% endblock %}
+
+{% block content %}
+<div class="aq-wrapper">
+	<div class="aq-card">
+		<div class="aq-icon">&#128274;</div>
+		<h1>Secure Your Account</h1>
+		<p class="aq-subtitle">
+			We noticed some unusual activity on your account. Set up these security
+			answers now — you'll be asked to confirm them if this happens again.
+		</p>
+
+		<form method="post" class="aq-form">
+			{% csrf_token %}
+
+			{% if form.non_field_errors %}
+				<div class="aq-error">{{ form.non_field_errors }}</div>
+			{% endif %}
+
+			<div class="aq-field">
+				<label for="{{ form.mothers_maiden_name.id_for_label }}">What is your mother's maiden name?</label>
+				{{ form.mothers_maiden_name }}
+				{% if form.mothers_maiden_name.errors %}
+					<span class="aq-field-error">{{ form.mothers_maiden_name.errors|join:", " }}</span>
+				{% endif %}
+			</div>
+
+			<div class="aq-field">
+				<label for="{{ form.home_address_answer.id_for_label }}">What was the address of your first home?</label>
+				{{ form.home_address_answer }}
+				{% if form.home_address_answer.errors %}
+					<span class="aq-field-error">{{ form.home_address_answer.errors|join:", " }}</span>
+				{% endif %}
+			</div>
+
+			<div class="aq-field">
+				<label for="{{ form.next_of_kin.id_for_label }}">Who is your next of kin?</label>
+				{{ form.next_of_kin }}
+				{% if form.next_of_kin.errors %}
+					<span class="aq-field-error">{{ form.next_of_kin.errors|join:", " }}</span>
+				{% endif %}
+			</div>
+
+			<button type="submit" class="aq-submit">Save & Continue</button>
+		</form>
+
+		<p class="aq-note">
+			Keep these answers memorable but private. You'll need them again if we ever
+			need to re-verify your identity.
+		</p>
+	</div>
+</div>
+
+<style>
+	.aq-wrapper {
+		min-height: 70vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 24px;
+	}
+
+	.aq-card {
+		background: #1a1a1f;
+		border: 1px solid #2c2c34;
+		border-radius: 12px;
+		padding: 48px 40px;
+		max-width: 460px;
+		width: 100%;
+		text-align: center;
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+	}
+
+	.aq-icon {
+		font-size: 36px;
+		margin-bottom: 12px;
+	}
+
+	.aq-card h1 {
+		color: #f2f2f2;
+		font-size: 22px;
+		margin-bottom: 10px;
+	}
+
+	.aq-subtitle {
+		color: #b8b8c0;
+		font-size: 14px;
+		line-height: 1.5;
+		margin-bottom: 28px;
+	}
+
+	.aq-form {
+		text-align: left;
+	}
+
+	.aq-field {
+		margin-bottom: 20px;
+	}
+
+	.aq-field label {
+		display: block;
+		color: #d4d4db;
+		font-size: 13px;
+		margin-bottom: 6px;
+	}
+
+	.aq-field input {
+		width: 100%;
+		background: #101014;
+		border: 1px solid #2c2c34;
+		border-radius: 8px;
+		padding: 11px 14px;
+		color: #f2f2f2;
+		font-size: 14px;
+		box-sizing: border-box;
+		transition: border-color 0.2s ease;
+	}
+
+	.aq-field input:focus {
+		outline: none;
+		border-color: #4c6ef5;
+	}
+
+	.aq-field-error {
+		display: block;
+		color: #e0563f;
+		font-size: 12px;
+		margin-top: 6px;
+	}
+
+	.aq-error {
+		background: rgba(224, 86, 63, 0.1);
+		border: 1px solid rgba(224, 86, 63, 0.3);
+		color: #e0563f;
+		border-radius: 8px;
+		padding: 10px 14px;
+		font-size: 13px;
+		margin-bottom: 18px;
+	}
+
+	.aq-submit {
+		width: 100%;
+		background: #4c6ef5;
+		color: #fff;
+		border: none;
+		padding: 13px 20px;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 14px;
+		cursor: pointer;
+		transition: background 0.2s ease;
+	}
+
+	.aq-submit:hover {
+		background: #3b5bdb;
+	}
+
+	.aq-note {
+		color: #7a7a85;
+		font-size: 12px;
+		margin-top: 22px;
+		line-height: 1.5;
+	}
+</style>
+{% endblock %}

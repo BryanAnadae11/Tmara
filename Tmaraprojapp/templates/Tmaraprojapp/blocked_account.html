@@ -1,0 +1,100 @@
+{% extends 'Tmaraprojapp/base.html' %}
+{% block title %}Account Blocked{% endblock %}
+
+{% block content %}
+<div class="blocked-wrapper">
+	<div class="blocked-card">
+		<div class="blocked-icon">&#9888;</div>
+		<h1>Account Blocked</h1>
+		<p class="blocked-reason">
+			{% if reason %}
+				{{ reason }}
+			{% else %}
+				Your account has been blocked. Please contact support for assistance.
+			{% endif %}
+		</p>
+
+		<div class="blocked-actions">
+			<a href="mailto:support@valonglobal.capital" class="btn-support">Contact Support</a>
+			<a href="{% url 'logout' %}" class="btn-logout">Log Out</a>
+		</div>
+	</div>
+</div>
+
+<style>
+	.blocked-wrapper {
+		min-height: 70vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 24px;
+	}
+
+	.blocked-card {
+		background: #1a1a1f;
+		border: 1px solid #2c2c34;
+		border-radius: 12px;
+		padding: 48px 40px;
+		max-width: 440px;
+		width: 100%;
+		text-align: center;
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+	}
+
+	.blocked-icon {
+		font-size: 40px;
+		color: #e0563f;
+		margin-bottom: 16px;
+	}
+
+	.blocked-card h1 {
+		color: #f2f2f2;
+		font-size: 22px;
+		margin-bottom: 12px;
+	}
+
+	.blocked-reason {
+		color: #b8b8c0;
+		font-size: 15px;
+		line-height: 1.5;
+		margin-bottom: 32px;
+	}
+
+	.blocked-actions {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.btn-support {
+		background: #4c6ef5;
+		color: #fff;
+		padding: 12px 20px;
+		border-radius: 8px;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 14px;
+		transition: background 0.2s ease;
+	}
+
+	.btn-support:hover {
+		background: #3b5bdb;
+	}
+
+	.btn-logout {
+		background: transparent;
+		color: #9a9aa5;
+		padding: 12px 20px;
+		border-radius: 8px;
+		text-decoration: none;
+		font-size: 14px;
+		border: 1px solid #2c2c34;
+		transition: border-color 0.2s ease, color 0.2s ease;
+	}
+
+	.btn-logout:hover {
+		border-color: #4c4c58;
+		color: #e0e0e6;
+	}
+</style>
+{% endblock %}

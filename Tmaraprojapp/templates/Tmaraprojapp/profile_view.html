@@ -8,7 +8,7 @@
 
 <div class="content-card">
   {% if client.profile_picUrl %}
-  <img src="{{ client.profile_picUrl }}" alt="Profile picture" class="profile-avatar">
+  <img src="{{request.user.client.profile_picUrl}}" alt="Profile picture" class="profile-avatar">
 {% else %}
   <div class="profile-avatar profile-avatar--placeholder" aria-label="No profile picture set"></div>
 {% endif %}

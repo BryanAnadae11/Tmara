@@ -138,6 +138,7 @@ def dashboard(request):
 	return render(request, 'Tmaraprojapp/dashboard.html', context)
 
 @login_required(login_url='clientsignin')
+@check_account_status
 def account_settings(request):
 	client= request.user.client
 	form= ClientUserForm(instance=client)
@@ -153,69 +154,111 @@ def account_settings(request):
 from decimal import Decimal, InvalidOperation
 
 @login_required(login_url='clientsignin')
+@check_account_status
 def fundtransfer(request):
 	return redirect('payee_list')
 
 
 @login_required(login_url='clientsignin')
+@check_account_status
 def foreign_transaction(request):
-	client= request.user.client
-	client_deposit= client.deposit
-	client_username= client.first_name
-	email= client.email
-	client_pk= client.id
-	client_email= client.email
-	canClientTransfer = client.active_transfer
-	otp= list(Otp.objects.all())
-	otp_code= random.choice(otp)
-	foreign_transaction= Foreign_transaction.objects.filter(client=client)
-	foreign_transaction_number= foreign_transaction.count()
-	last_foreign_transaction= foreign_transaction.last()
-	template= render_to_string('Tmaraprojapp/otp.html', {'name':client_username, 'otp':otp_code})
-	plain_message= strip_tags(template)
-	email_message= EmailMultiAlternatives(
-		'Transaction alert on your account!',
-		template,
-		settings.EMAIL_HOST_USER,
-		[client_email],
-		)
-	email_message.attach_alternative(template, 'text/html')
-	email_message.send()
+    client = request.user.client
+    client_deposit = client.deposit
+    client_username = client.first_name
+    client_email = client.email
+    client_pk = client.id
+    canClientTransfer = client.active_transfer
 
-	if request.method == 'POST' and canClientTransfer:
-		otp= request.POST.get('otp')
-		try:
-			otp_check= Otp.objects.get(otp)
-			foreign_transaction= Foreign_transaction.objects.filter(client=client)
-			foreign_transaction_number= foreign_transaction.count()
-			last_foreign_transaction= foreign_transaction.last()
-		except:
-		    pass
-		if foreign_transaction and float(foreign_transaction_number):
-			amount_sent= last_foreign_transaction.amount
-			bank_name= last_foreign_transaction.bank_name
-			account_number= last_foreign_transaction.account_number
-			client_new_balance= float(client_deposit) - float(amount_sent)
-			client_details= Client.objects.filter(id=client_pk)
-			client_details.update(deposit=client_new_balance)
-			debit_alert_template= render_to_string('Tmaraprojapp/foreign_debit_alert.html', {'name':client_username, 'amount':amount_sent, 'client_balance':client_new_balance})
-			email_message= EmailMessage(
-				'Debit alert on your account',
-				debit_alert_template,
-				settings.EMAIL_HOST_USER,
-				[client_email],
-				)
-			email_message.fail_silently=False
-			email_message.send()
-			return render(request, 'Tmaraprojapp/transaction_proof.html', {'amount_sent':amount_sent, 'bank_name':bank_name, 'account_number':account_number})
-		else:
-			return HttpResponse('We locked your account due to suspicious activity. Please contact support')
-	else:
-		return HttpResponse('Invalid Transfer Request. Please Contact Support')
-	context={}
-	return render(request, 'Tmaraprojapp/foreign_transaction.html', context)
+    otp_list = list(Otp.objects.all())
+    otp_code = random.choice(otp_list)
+
+    foreign_transaction = Foreign_transaction.objects.filter(client=client)
+    foreign_transaction_number = foreign_transaction.count()
+    last_foreign_transaction = foreign_transaction.last()
+
+    template = render_to_string(
+        'Tmaraprojapp/otp.html',
+        {'name': client_username, 'otp': otp_code}
+    )
+    plain_message = strip_tags(template)
+
+    email_message = EmailMultiAlternatives(
+        'Transaction alert on your account!',
+        plain_message,
+        settings.EMAIL_HOST_USER,
+        [client_email],
+    )
+    email_message.attach_alternative(template, 'text/html')
+    email_message.send()
+
+    if request.method == 'POST' and canClientTransfer:
+        otp = request.POST.get('otp')
+
+        try:
+            otp_check = Otp.objects.get(otp=otp)
+
+            foreign_transaction = Foreign_transaction.objects.filter(
+                client=client
+            )
+            foreign_transaction_number = foreign_transaction.count()
+            last_foreign_transaction = foreign_transaction.last()
+
+        except Otp.DoesNotExist:
+            return HttpResponse(
+                'We locked your account due to suspicious activity. '
+                'Please contact support.'
+            )
+
+        if foreign_transaction and foreign_transaction_number > 0:
+            amount_sent = last_foreign_transaction.amount
+            bank_name = last_foreign_transaction.bank_name
+            account_number = last_foreign_transaction.account_number
+
+            client_new_balance = float(client_deposit) - float(amount_sent)
+
+            client_details = Client.objects.filter(id=client_pk)
+            client_details.update(deposit=client_new_balance)
+
+            debit_alert_template = render_to_string(
+                'Tmaraprojapp/foreign_debit_alert.html',
+                {
+                    'name': client_username,
+                    'amount': amount_sent,
+                    'client_balance': client_new_balance,
+                }
+            )
+
+            email_message = EmailMessage(
+                'Debit alert on your account',
+                debit_alert_template,
+                settings.EMAIL_HOST_USER,
+                [client_email],
+            )
+            email_message.fail_silently = False
+            email_message.send()
+
+            return render(
+                request,
+                'Tmaraprojapp/transaction_proof.html',
+                {
+                    'amount_sent': amount_sent,
+                    'bank_name': bank_name,
+                    'account_number': account_number,
+                }
+            )
+
+        return HttpResponse(
+            'We locked your account due to suspicious activity. '
+            'Please contact support.'
+        )
+
+    return HttpResponse(
+        'Invalid Transfer Request. Please Contact Support'
+    )
+
 
 @login_required(login_url='clientsignin')
+@check_account_status
 def transactionhistory(request):
 	client= request.user.client
 	clientAccountNumber= client.account_number
@@ -536,6 +579,7 @@ def blocked_account(request):
 	return render(request, 'Tmaraprojapp/blocked_account.html', {'reason': client.blocked_reason})
 
 @login_required(login_url='clientsignin')
+@check_account_status
 def profile_view(request):
 	client = request.user.client
 	return render(request, 'Tmaraprojapp/profile_view.html', {'client': client})
@@ -557,6 +601,7 @@ def _get_client(request):
 # ---------- PAYEES ----------
 
 @login_required
+@check_account_status
 def payee_list(request):
 	client = _get_client(request)
 	payees = client.payees.all()
@@ -564,6 +609,7 @@ def payee_list(request):
 
 
 @login_required
+@check_account_status
 def payee_add(request):
 	client = _get_client(request)
 	if request.method == 'POST':
@@ -587,6 +633,7 @@ def payee_delete(request, pk):
 # ---------- MAKE A PAYMENT ----------
 
 @login_required
+@check_account_status
 def make_payment(request):
 	client = _get_client(request)
 	payees = client.payees.all()
@@ -627,6 +674,7 @@ def make_payment(request):
 
 
 @login_required
+@check_account_status
 def make_payment_review(request):
 	pending = request.session.get('pending_action')
 	if not pending or pending.get('type') != 'payment':
@@ -639,6 +687,7 @@ def make_payment_review(request):
 # ---------- TRANSFER (to a payee — see the account-model note above) ----------
 
 @login_required
+@check_account_status
 def transfer_money(request):
 	client = _get_client(request)
 	payees = client.payees.all()
@@ -665,6 +714,7 @@ def transfer_money(request):
 
 
 @login_required
+@check_account_status
 def transfer_review(request):
 	pending = request.session.get('pending_action')
 	if not pending or pending.get('type') != 'transfer':
@@ -677,6 +727,7 @@ def transfer_review(request):
 # ---------- INTERNATIONAL PAYMENT ----------
 
 @login_required
+@check_account_status
 def international_payment(request):
 	client = _get_client(request)
 	if request.method == 'POST':
@@ -702,6 +753,7 @@ def international_payment(request):
 
 
 @login_required
+@check_account_status
 def international_review(request):
 	pending = request.session.get('pending_action')
 	if not pending or pending.get('type') != 'international':
@@ -714,6 +766,7 @@ def international_review(request):
 # ---------- SCHEDULED PAYMENTS / STANDING ORDERS ----------
 
 @login_required
+@check_account_status
 def scheduled_payments(request):
 	client = _get_client(request)
 	orders = client.standing_orders.filter(is_active=True).order_by('next_payment_date')
@@ -721,6 +774,7 @@ def scheduled_payments(request):
 
 
 @login_required
+@check_account_status
 def add_standing_order(request):
 	client = _get_client(request)
 	payees = client.payees.all()
@@ -746,6 +800,7 @@ def add_standing_order(request):
 
 
 @login_required
+@check_account_status
 def cancel_standing_order(request, pk):
 	client = _get_client(request)
 	order = get_object_or_404(StandingOrder, pk=pk, client=client)
@@ -804,6 +859,7 @@ def verify_pin(request):
 
 # -------- Verify Pin and initiate transfer with transfer pin and email otp --------
 @login_required
+@check_account_status
 def verify_pin(request):
 	client = _get_client(request)
 	pending = request.session.get('pending_action')
@@ -841,6 +897,7 @@ def verify_pin(request):
 	return render(request, 'Tmaraprojapp/verify_pin.html', {'pending': pending, 'error': error})
 
 @login_required
+@check_account_status
 def verify_payment_otp(request):
 	client = _get_client(request)
 	pending = request.session.get('pending_action')
@@ -889,10 +946,12 @@ def verify_payment_otp(request):
 # -------- Verify Pin and initiate transfer with transfer pin and email otp ends here --------
 
 @login_required
+@check_account_status
 def payment_success(request):
 	return render(request, 'Tmaraprojapp/success.html')
 
-
+@login_required
+@check_account_status
 def _execute_pending_action(client, pending):
 	amount = float(pending.get('amount') or 0)
 

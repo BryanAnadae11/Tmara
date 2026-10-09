@@ -50,17 +50,16 @@ class Client(models.Model):
 
 	@property
 	def profile_picUrl(self):
-		try:
-			url= self.profile_pic.url
-		except:
-			url=''
-		return url
+		if self.profile_pic and self.profile_pic.name:
+			return self.profile_pic.url
+		return ''
 
 	def save(self, *args, **kwargs):
 		if self.account_number == '':
 			account_number= generate_account_number()
 			self.account_number= account_number
 		super().save(*args, **kwargs)
+		
 
 class History(models.Model):
 	client= models.ForeignKey(Client, null=True, on_delete= models.CASCADE)
@@ -121,7 +120,7 @@ class Otp(models.Model):
 class Foreign_transaction(models.Model):
 	STATUS = (
 		('pending_review', 'Pending Review'),
-		('approved', 'Approved'),
+		('successful', 'Successful'),
 		('declined', 'Declined'),
 	)
 	client= models.ForeignKey(Client, null=True, on_delete= models.SET_NULL)
